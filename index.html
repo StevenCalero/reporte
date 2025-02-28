@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Informe Técnico</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="contenido">
+        <h1>Generar Informe Técnico</h1>
+
+        <!-- Campos de entrada para los datos -->
+        <div class="form-group">
+            <label for="empresa">Empresa:</label>
+            <input type="text" id="empresa" placeholder="Ingrese la empresa">
+        </div>
+
+        <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" placeholder="Ingrese la dirección">
+        </div>
+
+        <div class="form-group">
+            <label for="contacto">Contacto:</label>
+            <input type="text" id="contacto" placeholder="Ingrese el contacto">
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" placeholder="Ingrese el teléfono">
+        </div>
+
+        <div class="form-group">
+            <label for="serie">Serie del equipo:</label>
+            <input type="text" id="serie" placeholder="Ingrese la serie">
+        </div>
+
+        <div class="form-group">
+            <label for="modelo">Modelo del equipo:</label>
+            <input type="text" id="modelo" placeholder="Ingrese el modelo">
+        </div>
+
+        <div class="form-group">
+            <label for="motivo">Motivo:</label>
+            <input type="text" id="motivo" placeholder="Ingrese el motivo">
+        </div>
+
+        <!-- Campo de texto para Diagnóstico Técnico -->
+        <div class="form-group">
+            <label for="diagnostico">Diagnóstico Técnico:</label>
+            <textarea id="diagnostico" rows="4" placeholder="Ingrese el diagnóstico técnico"></textarea>
+        </div>
+
+        <!-- Campo de texto para Observaciones -->
+        <div class="form-group">
+            <label for="observaciones">Observaciones:</label>
+            <textarea id="observaciones" rows="4" placeholder="Ingrese las observaciones"></textarea>
+        </div>
+
+        <!-- Campo de texto para Recomendaciones -->
+        <div class="form-group">
+            <label for="recomendaciones">Recomendaciones:</label>
+            <textarea id="recomendaciones" rows="4" placeholder="Ingrese las recomendaciones"></textarea>
+        </div>
+
+        <!-- Selección múltiple para el estado del equipo -->
+        <div class="form-group">
+            <label for="estadoEquipo">Estado del equipo:</label>
+            <select id="estadoEquipo" multiple>
+                <option value="Operativo">Operativo</option>
+                <option value="Por descarte">Por descarte</option>
+                <option value="Por cotizar">Por cotizar</option>
+            </select>
+            <small>Mantén presionada la tecla Ctrl (Windows) o Command (Mac) para seleccionar múltiples opciones.</small>
+        </div>
+
+        <!-- Sección para adjuntar registro fotográfico -->
+       <div class="form-group">
+            <label for="fotos">Registro Fotográfico:</label>
+            <input type="file" id="fotos" accept="image/*" multiple>
+            <small>Puedes seleccionar varias imágenes.</small>
+            <div id="vistaPreviaFotos"></div>
+        </div>
+
+        <!-- Área para la firma del técnico -->
+        <div class="form-group">
+            <label for="firmaTecnico">Firma del técnico:</label>
+            <canvas id="firmaTecnico" class="firma"></canvas>
+            <button id="limpiarFirmaTecnico">Limpiar firma</button>
+        </div>
+
+        <!-- Área para la firma del responsable -->
+        <div class="form-group">
+            <label for="firmaResponsable">Firma del responsable:</label>
+            <canvas id="firmaResponsable" class="firma"></canvas>
+            <button id="limpiarFirmaResponsable">Limpiar firma</button>
+        </div>
+
+        <!-- Botón para generar PDF -->
+        <button id="generarPDF">Generar PDF</button>
+    </div>
+
+    <!-- Incluir jsPDF, html2canvas y Signature Pad -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
