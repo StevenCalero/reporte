@@ -8,9 +8,33 @@
 </head>
 <body>
     <div id="contenido">
-        <h1>Generar Informe Técnico</h1>
+        <h1>Registrar Informe Técnico</h1>
 
         <!-- Campos de entrada para los datos -->
+        <div class="form-group">
+            <input type="date" id="fecha">
+<span id="fechaFormateada" style="display: none;"></span>
+
+<script>
+  function formatearFecha(fechaISO) {
+    let partes = fechaISO.split("-"); // Divide YYYY-MM-DD en partes
+    return `${partes[2]}/${partes[1]}/${partes[0]}`; // Retorna DD/MM/YYYY
+  }
+
+  let fechaActual = new Date().toISOString().split('T')[0];
+  let inputFecha = document.getElementById("fecha");
+  let spanFecha = document.getElementById("fechaFormateada");
+
+  inputFecha.value = fechaActual;
+  spanFecha.textContent = formatearFecha(fechaActual);
+
+  // Cambiar el formato cuando el usuario elige otra fecha
+  inputFecha.addEventListener("input", function () {
+    spanFecha.textContent = formatearFecha(this.value);
+  });
+  
+</script>
+        </div>
         <div class="form-group">
             <label for="empresa">Empresa:</label>
             <input type="text" id="empresa" placeholder="Ingrese la empresa">
@@ -39,6 +63,10 @@
         <div class="form-group">
             <label for="modelo">Modelo del equipo:</label>
             <input type="text" id="modelo" placeholder="Ingrese el modelo">
+        </div>
+        <div class="form-group">
+            <label for="modelo">Contador:</label>
+            <input type="text" id="contador" placeholder="Ingrese el contador">
         </div>
 
         <div class="form-group">
@@ -69,10 +97,11 @@
             <label for="estadoEquipo">Estado del equipo:</label>
             <select id="estadoEquipo" multiple>
                 <option value="Operativo">Operativo</option>
-                <option value="Por descarte">Por descarte</option>
-                <option value="Por cotizar">Por cotizar</option>
+                <option value="No Operativo">No Operativo</option>
+                <option value="Funcionando">Funcionando</option>
+                <option value="Ingreso Taller">Ingreso Taller</option>
+                <option value="Req. Descarte">Req. Descarte</option>
             </select>
-            <small>Mantén presionada la tecla Ctrl (Windows) o Command (Mac) para seleccionar múltiples opciones.</small>
         </div>
 
         <!-- Sección para adjuntar registro fotográfico -->
@@ -86,19 +115,22 @@
         <!-- Área para la firma del técnico -->
         <div class="form-group">
             <label for="firmaTecnico">Firma del técnico:</label>
-            <canvas id="firmaTecnico" class="firma"></canvas>
+            <canvas id="firmaTecnico" class="firma"></canvas><br>
+            <input type="text" id="NombreTecnico" placeholder="Nombre del Tecnico">
             <button id="limpiarFirmaTecnico">Limpiar firma</button>
         </div>
 
         <!-- Área para la firma del responsable -->
         <div class="form-group">
             <label for="firmaResponsable">Firma del responsable:</label>
-            <canvas id="firmaResponsable" class="firma"></canvas>
+            <canvas id="firmaResponsable" class="firma"></canvas><br>
+            <input type="text" id="NombreUsuario" placeholder="Nombre del Usuario">
+            <input type="email" id="correoUsuario" placeholder="Correo Electrónico" required><br>
             <button id="limpiarFirmaResponsable">Limpiar firma</button>
         </div>
 
         <!-- Botón para generar PDF -->
-        <button id="generarPDF">Generar PDF</button>
+        <button id="generarPDF">Generar Informe</button>
     </div>
 
     <!-- Incluir jsPDF, html2canvas y Signature Pad -->
@@ -106,5 +138,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 </body>
 </html>
