@@ -17,9 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const NombreUsuario = document.getElementById("NombreUsuario");
     const correoUsuario = document.getElementById("correoUsuario");
     const fechaFormateada = document.getElementById("fechaFormateada");
-
-
-
+  
     if (
         !empresa || !direccion || !contacto || !telefono || !serie || !modelo || !Contador||!NombreTecnico||
         !motivo || !diagnostico || !observaciones || !recomendaciones || !estadoEquipo || !fotos || !fechaFormateada || !NombreUsuario||!correoUsuario
@@ -31,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Inicializar Signature Pad para las firmas
     const canvasTecnico = document.getElementById("firmaTecnico");
     const canvasResponsable = document.getElementById("firmaResponsable");
+   
 
     if (!canvasTecnico || !canvasResponsable) {
         console.error("No se encontraron los canvas para las firmas.");
@@ -77,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const lineHeight = 10; // Altura de cada línea
         const pageHeight = 280; // Altura máxima de la página A4
 
+
         // Función para agregar texto con ajuste de posición
         function addText(text, maxWidth, isTitle = false, spacing = lineHeight) {
             const lines = pdf.splitTextToSize(text, maxWidth); // Divide el texto en líneas
@@ -99,7 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Agregar un espacio adicional después del párrafo
             y += spacing * 0.5; // Espacio adicional (mitad del espaciado normal)
         }
-
+        
+        
        // Título principal "INFORME TÉCNICO" con fondo negro y texto blanco
 pdf.setFontSize(16);
 pdf.setFillColor(0, 0, 0); // Fondo negro
@@ -107,10 +108,17 @@ pdf.rect(margin, y - 7, 180, 10, 'F'); // Rectángulo de fondo (ajusta el ancho 
 pdf.setTextColor(255, 255, 255); // Texto blanco
 pdf.setFont("helvetica", "bold");
 pdf.text("INFORME TÉCNICO", margin, y); // Agregar el texto sobre el fondo
-pdf.text("CODESA", 164, y); // Agregar el texto sobre el fondo
+pdf.text("CODESA", 165, y); // Agregar el texto sobre el fondo
 y += lineHeight * 2; // Espacio adicional después del título
 pdf.setFillColor(220, 7, 20); // Fondo negro
 pdf.rect(margin, y - 16, 180, 5, 'F'); // Rectángulo de fondo (ajusta el ancho y alto según sea necesario)
+
+pdf.setFontSize(10);
+pdf.setFillColor(0, 0, 0); // Fondo negro
+pdf.setTextColor(255, 255, 255); // Texto blanco
+pdf.setFont("helvetica", "normal");
+pdf.text("Av. República de Colombia 625 San Isidro", 10, 28); // Agregar el texto sobre el fondo
+pdf.text("Garantías 988567385 / 988567385", 135, 28); // Agregar el texto sobre el fondo
 
         // Información general
         
