@@ -115,7 +115,7 @@ pdf.rect(margin, y - 16, 180, 5, 'F'); // Rectángulo de fondo (ajusta el ancho 
 
 pdf.setFontSize(10);
 pdf.setFillColor(0, 0, 0); // Fondo negro
-pdf.setTextColor(255, 255, 255); // Texto blanco
+pdf.setTextColor(0, 0, 0); // Texto blanco
 pdf.setFont("helvetica", "normal");
 pdf.text("Av. República de Colombia 625 San Isidro", 10, 28); // Agregar el texto sobre el fondo
 pdf.text("Garantías 988567385 / 988567385", 135, 28); // Agregar el texto sobre el fondo
