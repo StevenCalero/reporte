@@ -107,6 +107,7 @@ pdf.rect(margin, y - 7, 180, 10, 'F'); // Rectángulo de fondo (ajusta el ancho 
 pdf.setTextColor(255, 255, 255); // Texto blanco
 pdf.setFont("helvetica", "bold");
 pdf.text("INFORME TÉCNICO", margin, y); // Agregar el texto sobre el fondo
+pdf.text("CODESA", 164, y); // Agregar el texto sobre el fondo
 y += lineHeight * 2; // Espacio adicional después del título
 pdf.setFillColor(220, 7, 20); // Fondo negro
 pdf.rect(margin, y - 16, 180, 5, 'F'); // Rectángulo de fondo (ajusta el ancho y alto según sea necesario)
