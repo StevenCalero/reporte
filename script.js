@@ -257,7 +257,7 @@ addText(`Nombre y Firma del Tecnico: ${NombreTecnico.value}`, 180);
         addText(`Correo Electronico: ${correoUsuario.value}`, 180);
 
         // Guardar el PDF
-        pdf.save("informe_tecnico.pdf");
+        pdf.save(serie.value + ".pdf");
         alert("El PDF se ha generado correctamente.");
     });
 });
