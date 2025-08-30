@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soporte Técnico Kyocera - WhatsApp</title>
+    <title>Solicitud de Soporte - WhatsApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -231,7 +231,7 @@
     <div class="container">
         <div class="header">
             <div class="header-content">
-                <img src="https://www.kyocera.com.es/static/version1697633114/frontend/Kyocera/kyocerastore/es_ES/images/kyocera-logo.svg" alt="Kyocera Logo" class="logo">
+                <img src="https://www.codesaperu.com/static/img/logo-codesa-02@2x.png" alt="Kyocera Logo" class="logo">
                 <div class="header-text">
                     <h1>Soporte Técnico Kyocera</h1>
                     <p>Complete el formulario y envíelo directamente por WhatsApp</p>
@@ -246,11 +246,7 @@
         <div class="form-container">
             <div class="autofill-notice">
                 <i class="fas fa-info-circle"></i>
-                <span>Los campos de modelo y número de serie se autocompletarán desde la URL al cargar esta página.</span>
-            </div>
-            
-            <div class="url-display">
-                <strong>URL detectada:</strong> <span id="current-url"></span>
+                <span>Los campos de modelo y número  se autocompletan.</span>
             </div>
             
             <form id="supportForm">
@@ -344,16 +340,6 @@
                         <textarea id="problemDetails" name="problemDetails" rows="5" required></textarea>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="urgency" class="required">Nivel de Urgencia</label>
-                        <select id="urgency" name="urgency" required>
-                            <option value="" disabled selected>Seleccione una opción</option>
-                            <option value="Baja">Baja (Puede esperar 48-72 horas)</option>
-                            <option value="Media">Media (Puede esperar 24-48 horas)</option>
-                            <option value="Alta">Alta (Necesita solución en menos de 24 horas)</option>
-                            <option value="Crítica">Crítica (Equipo no funciona - Urgente)</option>
-                        </select>
-                    </div>
                 </div>
                 
                 <button type="submit" class="btn-submit">
@@ -425,7 +411,6 @@
                 const email = document.getElementById('email').value;
                 const requestType = document.getElementById('requestType').value;
                 const problemDetails = document.getElementById('problemDetails').value;
-                const urgency = document.getElementById('urgency').value;
                 
                 // Crear mensaje para WhatsApp
                 const message = `*Solicitud de Servicio Kyocera*%0A%0A` +
@@ -441,7 +426,6 @@
                                `• Email: ${email || 'No proporcionado'}%0A%0A` +
                                `*Detalles del Servicio:*%0A` +
                                `• Tipo: ${requestType}%0A` +
-                               `• Urgencia: ${urgency}%0A` +
                                `• Descripción:%0A${problemDetails}%0A%0A` +
                                `*Fecha:* ${new Date().toLocaleString()}`;
                 
@@ -458,3 +442,4 @@
     </script>
 </body>
 </html>
+
