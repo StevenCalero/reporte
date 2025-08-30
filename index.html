@@ -3,141 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar Informe Técnico</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Miguelito Sabor Peruano - Pedidos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=1200') fixed;
+            background-size: cover;
+            padding: 20px;
+            min-height: 100vh;
+            background-position: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 4px solid #ff0000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff0000, #ffffff, #ff0000);
+            border-radius: 15px;
+            border: 2px solid #ff0000;
+        }
+        
+        .header h1 {
+            color: #ff0000;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .dish-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border: 2px solid #ff0000;
+        }
+        
+        .dish-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #ff0000;
+        }
+        
+        .dish-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #ff0000;
+            margin-top: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ff0000;
+            font-size: 16px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff0000;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        }
+        
+        .btn-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.6);
+        }
+        
+        .whatsapp-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .required {
+            color: #ff0000;
+            font-size: 18px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dishes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="contenido">
-        <h1>Registrar Informe Técnico</h1>
-
-        <!-- Campos de entrada para los datos -->
-        <div class="form-group">
-            <input type="date" id="fecha">
-<span id="fechaFormateada" style="display: none;"></span>
-
-<script>
-  function formatearFecha(fechaISO) {
-    let partes = fechaISO.split("-"); // Divide YYYY-MM-DD en partes
-    return `${partes[2]}/${partes[1]}/${partes[0]}`; // Retorna DD/MM/YYYY
-  }
-
-  let fechaActual = new Date().toISOString().split('T')[0];
-  let inputFecha = document.getElementById("fecha");
-  let spanFecha = document.getElementById("fechaFormateada");
-
-  inputFecha.value = fechaActual;
-  spanFecha.textContent = formatearFecha(fechaActual);
-
-  // Cambiar el formato cuando el usuario elige otra fecha
-  inputFecha.addEventListener("input", function () {
-    spanFecha.textContent = formatearFecha(this.value);
-  });
-  
-</script>
+    <div class="container">
+        <div class="header">
+            <h1>🇵🇪 Miguelito Sabor Peruano 🍛</h1>
+            <p>¡Llena el formulario y envía tu pedido directamente por WhatsApp!</p>
         </div>
-        <div class="form-group">
-            <label for="empresa">Empresa:</label>
-            <input type="text" id="empresa" placeholder="Ingrese la empresa">
+        
+        <div class="dishes-grid">
+            <div class="dish-item">
+                <img src="https://images.unsplash.com/photo-1630918037678-a8f7e0fbb2ff?w=120&h=120&fit=crop" alt="Lomo Saltado">
+                <div class="dish-name">Lomo Saltado</div>
+            </div>
+            <div class="dish-item">
+                <img src="https://images.unsplash.com/photo-1586810722683-de7c5b9b1d3e?w=120&h=120&fit=crop" alt="Ceviche">
+                <div class="dish-name">Ceviche</div>
+            </div>
+            <div class="dish-item">
+                <img src="https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=120&h=120&fit=crop" alt="Ají de Gallina">
+                <div class="dish-name">Ají de Gallina</div>
+            </div>
+            <div class="dish-item">
+                <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=120&h=120&fit=crop" alt="Causa Limeña">
+                <div class="dish-name">Causa Limeña</div>
+            </div>
+            <div class="dish-item">
+                <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=120&h=120&fit=crop" alt="Arroz con Pollo">
+                <div class="dish-name">Arroz con Pollo</div>
+            </div>
+            <div class="dish-item">
+                <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=120&h=120&fit=crop" alt="Anticuchos">
+                <div class="dish-name">Anticuchos</div>
+            </div>
         </div>
-
-        <div class="form-group">
-            <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" placeholder="Ingrese la dirección">
-        </div>
-
-        <div class="form-group">
-            <label for="contacto">Contacto:</label>
-            <input type="text" id="contacto" placeholder="Ingrese el contacto">
-        </div>
-
-        <div class="form-group">
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" placeholder="Ingrese el teléfono">
-        </div>
-
-        <div class="form-group">
-            <label for="serie">Serie del equipo:</label>
-            <input type="text" id="serie" placeholder="Ingrese la serie">
-        </div>
-
-        <div class="form-group">
-            <label for="modelo">Modelo del equipo:</label>
-            <input type="text" id="modelo" placeholder="Ingrese el modelo">
-        </div>
-        <div class="form-group">
-            <label for="modelo">Contador:</label>
-            <input type="text" id="contador" placeholder="Ingrese el contador">
-        </div>
-
-        <div class="form-group">
-            <label for="motivo">Motivo:</label>
-            <input type="text" id="motivo" placeholder="Ingrese el motivo">
-        </div>
-
-        <!-- Campo de texto para Diagnóstico Técnico -->
-        <div class="form-group">
-            <label for="diagnostico">Diagnóstico Técnico:</label>
-            <textarea id="diagnostico" rows="4" placeholder="Ingrese el diagnóstico técnico"></textarea>
-        </div>
-
-        <!-- Campo de texto para Observaciones -->
-        <div class="form-group">
-            <label for="observaciones">Observaciones:</label>
-            <textarea id="observaciones" rows="4" placeholder="Ingrese las observaciones"></textarea>
-        </div>
-
-        <!-- Campo de texto para Recomendaciones -->
-        <div class="form-group">
-            <label for="recomendaciones">Recomendaciones:</label>
-            <textarea id="recomendaciones" rows="4" placeholder="Ingrese las recomendaciones"></textarea>
-        </div>
-
-        <!-- Selección múltiple para el estado del equipo -->
-        <div class="form-group">
-            <label for="estadoEquipo">Estado del equipo:</label>
-            <select id="estadoEquipo" multiple>
-                <option value="Operativo">Operativo</option>
-                <option value="No Operativo">No Operativo</option>
-                <option value="Funcionando">Funcionando</option>
-                <option value="Ingreso Taller">Ingreso Taller</option>
-                <option value="Req. Descarte">Req. Descarte</option>
-            </select>
-        </div>
-
-        <!-- Sección para adjuntar registro fotográfico -->
-       <div class="form-group">
-            <label for="fotos">Registro Fotográfico:</label>
-            <input type="file" id="fotos" accept="image/*" multiple>
-            <small>Puedes seleccionar varias imágenes.</small>
-            <div id="vistaPreviaFotos"></div>
-        </div>
-
-        <!-- Área para la firma del técnico -->
-        <div class="form-group">
-            <label for="firmaTecnico">Firma del técnico:</label>
-            <canvas id="firmaTecnico" class="firma"></canvas><br>
-            <input type="text" id="NombreTecnico" placeholder="Nombre del Tecnico">
-            <button id="limpiarFirmaTecnico">Limpiar firma</button>
-        </div>
-
-        <!-- Área para la firma del responsable -->
-        <div class="form-group">
-            <label for="firmaResponsable">Firma del responsable:</label>
-            <canvas id="firmaResponsable" class="firma"></canvas><br>
-            <input type="text" id="NombreUsuario" placeholder="Nombre del Usuario">
-            <input type="email" id="correoUsuario" placeholder="Correo Electrónico" required><br>
-            <button id="limpiarFirmaResponsable">Limpiar firma</button>
-        </div>
-
-        <!-- Botón para generar PDF -->
-        <button id="generarPDF">Generar Informe</button>
+        
+        <form id="pedidoForm">
+            <div class="form-group">
+                <label for="nombre">Nombre completo <span class="required">*</span></label>
+                <input type="text" id="nombre" required placeholder="👤 Tu nombre completo">
+            </div>
+            
+            <div class="form-group">
+                <label for="telefono">Teléfono de contacto <span class="required">*</span></label>
+                <input type="tel" id="telefono" required placeholder="📞 +51 999 888 777">
+            </div>
+            
+            <div class="form-group">
+                <label for="direccion">Dirección de envío <span class="required">*</span></label>
+                <textarea id="direccion" required rows="3" placeholder="🏠 Dirección completa y referencia"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="entrada">Entrada 🥗</label>
+                <select id="entrada">
+                    <option value="">Selecciona una entrada</option>
+                    <option value="Ceviche">Ceviche 🐟</option>
+                    <option value="Causa Limeña">Causa Limeña 🥔</option>
+                    <option value="Anticuchos">Anticuchos 🍢</option>
+                    <option value="Tequeños">Tequeños de Queso 🧀</option>
+                    <option value="Salchipapas">Salchipapas 🍟</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="fondo">Plato de Fondo 🍛</label>
+                <select id="fondo">
+                    <option value="">Selecciona un plato principal</option>
+                    <option value="Lomo Saltado">Lomo Saltado 🥩</option>
+                    <option value="Ají de Gallina">Ají de Gallina 🐔</option>
+                    <option value="Arroz con Pollo">Arroz con Pollo 🍚</option>
+                    <option value="Tallarines Rojos">Tallarines Rojos 🍝</option>
+                    <option value="Pollo a la Brasa">Pollo a la Brasa 🍗</option>
+                    <option value="Seco de Res">Seco de Res 🐄</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="bebida">Bebida 🥤</label>
+                <select id="bebida">
+                    <option value="">Selecciona una bebida</option>
+                    <option value="Chicha Morada">Chicha Morada 🍇</option>
+                    <option value="Inca Kola">Inca Kola 🥤</option>
+                    <option value="Maracuyá">Jugo de Maracuyá 🍹</option>
+                    <option value="Limonada">Limonada 🍋</option>
+                    <option value="Emoliente">Emoliente ☕</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="horario">Horario de entrega 🕒</label>
+                <input type="time" id="horario">
+            </div>
+            
+            <div class="form-group">
+                <label for="pago">Método de pago 💰</label>
+                <select id="pago">
+                    <option value="Efectivo">Efectivo 💵</option>
+                    <option value="Yape">Yape 📱</option>
+                    <option value="Plin">Plin 📲</option>
+                    <option value="Transferencia">Transferencia 🏦</option>
+                    <option value="Tarjeta">Tarjeta 💳</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="comentarios">Comentarios adicionales 💬</label>
+                <textarea id="comentarios" rows="3" placeholder="🌶️ Especificaciones especiales, alergias, etc."></textarea>
+            </div>
+            
+            <button type="button" onclick="enviarWhatsApp()" class="btn-whatsapp">
+                <span class="whatsapp-icon">📱</span> ENVIAR PEDIDO POR WHATSAPP
+            </button>
+        </form>
     </div>
 
-    <!-- Incluir jsPDF, html2canvas y Signature Pad -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    <script src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        function enviarWhatsApp() {
+            // Obtener valores del formulario
+            const nombre = document.getElementById('nombre').value;
+            const telefono = document.getElementById('telefono').value;
+            const direccion = document.getElementById('direccion').value;
+            const entrada = document.getElementById('entrada').value;
+            const fondo = document.getElementById('fondo').value;
+            const bebida = document.getElementById('bebida').value;
+            const horario = document.getElementById('horario').value;
+            const pago = document.getElementById('pago').value;
+            const comentarios = document.getElementById('comentarios').value;
+            
+            // Validar campos obligatorios
+            if (!nombre || !telefono || !direccion) {
+                alert('Por favor completa los campos obligatorios (*)');
+                return;
+            }
+            
+            // Crear mensaje para WhatsApp
+            let mensaje = `¡HOLA! 👋 QUIERO HACER UN PEDIDO EN MIGUELITO SABOR PERUANO 🍛%0A%0A`;
+            mensaje += `*📌 MIS DATOS:*%0A`;
+            mensaje += `• *Nombre:* ${nombre}%0A`;
+            mensaje += `• *Teléfono:* ${telefono}%0A`;
+            mensaje += `• *Dirección:* ${direccion}%0A%0A`;
+            
+            mensaje += `*🍽️ MI PEDIDO:*%0A`;
+            if (entrada) mensaje += `• *Entrada:* ${entrada}%0A`;
+            if (fondo) mensaje += `• *Plato principal:* ${fondo}%0A`;
+            if (bebida) mensaje += `• *Bebida:* ${bebida}%0A`;
+            if (horario) mensaje += `• *Horario entrega:* ${horario}%0A`;
+            mensaje += `• *Método pago:* ${pago}%0A`;
+            if (comentarios) mensaje += `• *Comentarios:* ${comentarios}%0A`;
+            mensaje += `%0A¡GRACIAS! 😊 🇵🇪`;
+            
+            // Número de WhatsApp (reemplaza con TU número)
+            const numeroWhatsApp = '51987654321'; // ← 🔥 CAMBIA ESTE NÚMERO POR EL TUYO
+            
+            // Crear enlace de WhatsApp
+            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
+            
+            // Abrir WhatsApp
+            window.open(urlWhatsApp, '_blank');
+        }
+    </script>
 </body>
 </html>
