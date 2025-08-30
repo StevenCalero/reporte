@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Soporte Kyocera</title>
+    <title>Soporte Técnico Kyocera - WhatsApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --kyocera-blue: #003366;
@@ -11,62 +12,114 @@
             --kyocera-gray: #F5F5F5;
             --kyocera-dark: #333333;
             --whatsapp-green: #25D366;
-            --whatsapp-dark-green: #128C7E;
+            --whatsapp-dark: #128C7E;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--kyocera-gray);
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
             margin: 0;
             padding: 20px;
             color: var(--kyocera-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .form-container {
+        .container {
             max-width: 800px;
-            margin: 30px auto;
+            width: 100%;
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
         
-        .form-header {
+        .header {
+            background: linear-gradient(135deg, var(--kyocera-blue) 0%, #004080 100%);
+            color: white;
+            padding: 25px;
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--kyocera-blue);
-            padding-bottom: 15px;
             position: relative;
         }
         
-        .form-header img {
-            height: 50px;
-            margin-bottom: 15px;
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         
-        .form-header h1 {
-            color: var(--kyocera-blue);
+        .logo {
+            height: 50px;
+        }
+        
+        .header-text h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 28px;
+        }
+        
+        .header-text p {
+            margin: 5px 0 0;
+            opacity: 0.9;
         }
         
         .whatsapp-badge {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: 15px;
+            right: 15px;
             background-color: var(--whatsapp-green);
             color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 14px;
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
         
-        .form-group {
+        .form-container {
+            padding: 30px;
+        }
+        
+        .autofill-notice {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--whatsapp-green);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .autofill-notice i {
+            color: var(--whatsapp-green);
+            font-size: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            color: var(--kyocera-blue);
+            border-bottom: 2px solid var(--kyocera-blue);
+            padding-bottom: 8px;
             margin-bottom: 20px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .form-row {
@@ -75,7 +128,7 @@
             margin-bottom: 20px;
         }
         
-        .form-col {
+        .form-group {
             flex: 1;
         }
         
@@ -89,64 +142,23 @@
         
         input, select, textarea {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: border 0.3s;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
             box-sizing: border-box;
         }
         
         input:focus, select:focus, textarea:focus {
             border-color: var(--kyocera-blue);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
         }
         
         .readonly {
             background-color: rgba(0, 51, 102, 0.05);
-            color: #666;
-        }
-        
-        .equipment-info {
-            background-color: rgba(0, 51, 102, 0.05);
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--kyocera-blue);
-            position: relative;
-        }
-        
-        .equipment-info:before {
-            content: "Información del equipo (autocompletada desde URL)";
-            display: block;
-            font-size: 12px;
-            color: var(--kyocera-blue);
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .btn-submit {
-            background-color: var(--whatsapp-green);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 250px;
-            margin: 30px auto 0;
-            text-transform: uppercase;
-        }
-        
-        .btn-submit:hover {
-            background-color: var(--whatsapp-dark-green);
+            color: #555;
         }
         
         .required:after {
@@ -154,70 +166,101 @@
             color: var(--kyocera-red);
         }
         
-        .whatsapp-icon {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            background-color: white;
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.243-1.641a11.882 11.882 0 005.74 1.475h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488'/%3E%3C/svg%3E") no-repeat center;
-            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.570-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.243-1.641a11.882 11.882 0 005.74 1.475h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488'/%3E%3C/svg%3E") no-repeat center;
-        }
-        
-        .url-info {
-            background-color: #e8f5e9;
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            border-left: 4px solid var(--whatsapp-green);
+        .btn-submit {
+            background-color: var(--whatsapp-green);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            margin-top: 10px;
         }
         
-        .url-info:before {
-            content: "ℹ";
-            font-weight: bold;
-            font-size: 16px;
+        .btn-submit:hover {
+            background-color: var(--whatsapp-dark);
         }
         
-        @media (max-width: 600px) {
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--kyocera-gray);
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .url-display {
+            background-color: #f0f7ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+        
+        @media (max-width: 700px) {
             .form-row {
                 flex-direction: column;
                 gap: 0;
             }
             
-            .btn-submit {
-                width: 100%;
+            .header-content {
+                flex-direction: column;
+                text-align: center;
             }
             
             .whatsapp-badge {
                 position: relative;
-                margin-top: 10px;
+                top: 0;
+                right: 0;
+                margin-top: 15px;
                 justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <div class="form-header">
-            <img src="https://www.codesaperu.com/static/img/logo-codesa-02@2x.png" alt="Kyocera Logo">
-            <h1>Formulario de Solicitud de Servicio</h1>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <img src="https://www.kyocera.com.es/static/version1697633114/frontend/Kyocera/kyocerastore/es_ES/images/kyocera-logo.svg" alt="Kyocera Logo" class="logo">
+                <div class="header-text">
+                    <h1>Soporte Técnico Kyocera</h1>
+                    <p>Complete el formulario y envíelo directamente por WhatsApp</p>
+                </div>
+            </div>
             <div class="whatsapp-badge">
-                <span class="whatsapp-icon"></span>
-                Envío por WhatsApp
+                <i class="fab fa-whatsapp"></i>
+                <span>Envío directo a WhatsApp</span>
             </div>
         </div>
         
-        <div class="url-info">
-            Los campos de modelo y número de serie se autocompletarán automáticamente desde la URL al cargar esta página.
-        </div>
-        
-        <form id="supportForm">
-            <div class="equipment-info">
-                <div class="form-row">
-                    <div class="form-col">
+        <div class="form-container">
+            <div class="autofill-notice">
+                <i class="fas fa-info-circle"></i>
+                <span>Los campos de modelo y número de serie se autocompletarán desde la URL al cargar esta página.</span>
+            </div>
+            
+            <div class="url-display">
+                <strong>URL detectada:</strong> <span id="current-url"></span>
+            </div>
+            
+            <form id="supportForm">
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-print"></i>
+                        <span>Información del Equipo</span>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label for="equipmentModel">Modelo del Equipo</label>
                             <input type="text" id="equipmentModel" name="equipmentModel" list="modelList" class="readonly" readonly>
@@ -227,85 +270,125 @@
                                 <option value="ECOSYS P5026cdn">
                                 <option value="TASKalfa 2554ci">
                                 <option value="ECOSYS M5526cdw">
+                                <option value="MA5500">
                             </datalist>
                         </div>
-                    </div>
-                    <div class="form-col">
                         <div class="form-group">
                             <label for="serialNumber">Número de Serie</label>
                             <input type="text" id="serialNumber" name="serialNumber" class="readonly" readonly>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-col">
-                    <div class="form-group">
-                        <label for="companyName" class="required">Razón Social</label>
-                        <input type="text" id="companyName" name="companyName" required>
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-building"></i>
+                        <span>Información de la Empresa</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyName" class="required">Razón Social</label>
+                            <input type="text" id="companyName" name="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ruc" class="required">RUC</label>
+                            <input type="text" id="ruc" name="ruc" pattern="[0-9]{11}" required>
+                        </div>
                     </div>
                 </div>
-                <div class="form-col">
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-user"></i>
+                        <span>Información de Contacto</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName" class="required">Nombre de Contacto</label>
+                            <input type="text" id="contactName" name="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber" class="required">Número Telefónico</label>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" required>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
-                        <label for="ruc" class="required">RUC</label>
-                        <input type="text" id="ruc" name="ruc" pattern="[0-9]{11}" required>
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="email">
                     </div>
                 </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-col">
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-tools"></i>
+                        <span>Detalles del Servicio</span>
+                    </div>
+                    
                     <div class="form-group">
-                        <label for="contactName" class="required">Nombre de Contacto</label>
-                        <input type="text" id="contactName" name="contactName" required>
+                        <label for="requestType" class="required">Tipo de Solicitud</label>
+                        <select id="requestType" name="requestType" required>
+                            <option value="" disabled selected>Seleccione una opción</option>
+                            <option value="Soporte Técnico">Soporte Técnico</option>
+                            <option value="Instalación">Instalación</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Capacitación">Capacitación</option>
+                            <option value="Garantía">Garantía</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="problemDetails" class="required">Detalle del Problema/Solicitud</label>
+                        <textarea id="problemDetails" name="problemDetails" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="urgency" class="required">Nivel de Urgencia</label>
+                        <select id="urgency" name="urgency" required>
+                            <option value="" disabled selected>Seleccione una opción</option>
+                            <option value="Baja">Baja (Puede esperar 48-72 horas)</option>
+                            <option value="Media">Media (Puede esperar 24-48 horas)</option>
+                            <option value="Alta">Alta (Necesita solución en menos de 24 horas)</option>
+                            <option value="Crítica">Crítica (Equipo no funciona - Urgente)</option>
+                        </select>
                     </div>
                 </div>
-                <div class="form-col">
-                    <div class="form-group">
-                        <label for="phoneNumber" class="required">Número Telefónico</label>
-                        <input type="tel" id="phoneNumber" name="phoneNumber" required>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="requestType" class="required">Tipo de Solicitud</label>
-                <select id="requestType" name="requestType" required>
-                    <option value="" disabled selected>Seleccione una opción</option>
-                    <option value="soporte">Soporte Técnico</option>
-                    <option value="instalacion">Instalación</option>
-                    <option value="mantenimiento">Mantenimiento</option>
-                    <option value="capacitacion">Capacitación</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="problemDetails" class="required">Detalle del Problema/Solicitud</label>
-                <textarea id="problemDetails" name="problemDetails" rows="5" required></textarea>
-            </div>
-            
-            <button type="submit" class="btn-submit">
-                <span class="whatsapp-icon"></span>
-                Enviar por WhatsApp
-            </button>
-        </form>
+                
+                <button type="submit" class="btn-submit">
+                    <i class="fab fa-whatsapp"></i>
+                    Enviar por WhatsApp
+                </button>
+            </form>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 Soporte Técnico Kyocera - Todos los derechos reservados</p>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar la URL actual
+            document.getElementById('current-url').textContent = window.location.href;
+            
             // Obtener parámetros de la URL
             const urlParams = new URLSearchParams(window.location.search);
-            const model = urlParams.get('model');
-            const serial = urlParams.get('serial');
+            const modelo = urlParams.get('modelo');
+            const serie = urlParams.get('serie');
+            
+            console.log("Parámetros de URL:", { modelo, serie });
             
             // Autocompletar campos si los parámetros están presentes
-            if (model) {
-                document.getElementById('equipmentModel').value = model;
+            if (modelo) {
+                document.getElementById('equipmentModel').value = decodeURIComponent(modelo);
+                console.log("Modelo autocompletado:", decodeURIComponent(modelo));
             }
             
-            if (serial) {
-                document.getElementById('serialNumber').value = serial;
+            if (serie) {
+                document.getElementById('serialNumber').value = decodeURIComponent(serie);
+                console.log("Serie autocompletada:", decodeURIComponent(serie));
             }
             
             // Validación de RUC
@@ -314,6 +397,11 @@
                 if (this.value.length > 11) {
                     this.value = this.value.slice(0, 11);
                 }
+            });
+            
+            // Validación de teléfono
+            document.getElementById('phoneNumber').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^\d+]/g, '');
             });
             
             // Manejar el envío del formulario
@@ -334,25 +422,33 @@
                 const rucValue = document.getElementById('ruc').value;
                 const contactName = document.getElementById('contactName').value;
                 const phoneNumber = document.getElementById('phoneNumber').value;
+                const email = document.getElementById('email').value;
                 const requestType = document.getElementById('requestType').value;
                 const problemDetails = document.getElementById('problemDetails').value;
+                const urgency = document.getElementById('urgency').value;
                 
                 // Crear mensaje para WhatsApp
                 const message = `*Solicitud de Servicio Kyocera*%0A%0A` +
-                               `*Modelo del Equipo:* ${equipmentModel}%0A` +
-                               `*Número de Serie:* ${serialNumber}%0A` +
-                               `*Razón Social:* ${companyName}%0A` +
-                               `*RUC:* ${rucValue}%0A` +
-                               `*Nombre de Contacto:* ${contactName}%0A` +
-                               `*Teléfono:* ${phoneNumber}%0A` +
-                               `*Tipo de Solicitud:* ${requestType}%0A` +
-                               `*Detalles:* ${problemDetails}`;
+                               `*Información del Equipo:*%0A` +
+                               `• Modelo: ${equipmentModel}%0A` +
+                               `• Número de Serie: ${serialNumber}%0A%0A` +
+                               `*Información de la Empresa:*%0A` +
+                               `• Razón Social: ${companyName}%0A` +
+                               `• RUC: ${rucValue}%0A%0A` +
+                               `*Información de Contacto:*%0A` +
+                               `• Nombre: ${contactName}%0A` +
+                               `• Teléfono: ${phoneNumber}%0A` +
+                               `• Email: ${email || 'No proporcionado'}%0A%0A` +
+                               `*Detalles del Servicio:*%0A` +
+                               `• Tipo: ${requestType}%0A` +
+                               `• Urgencia: ${urgency}%0A` +
+                               `• Descripción:%0A${problemDetails}%0A%0A` +
+                               `*Fecha:* ${new Date().toLocaleString()}`;
                 
-
                 // Número de WhatsApp de Perú
                 const phoneNumberPeru = "977546689";
+                
                 // Crear enlace de WhatsApp
-
                 const whatsappUrl = `https://wa.me/${phoneNumberPeru}?text=${message}`;
                 
                 // Abrir WhatsApp
