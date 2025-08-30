@@ -242,7 +242,7 @@
         <div class="form-container">
             <div class="autofill-notice">
                 <i class="fas fa-info-circle"></i>
-                <span>Los campos de modelo y número  se autocompletan.</span>
+                <span>Los campos de modelo y número de serie se autocompletan.</span>
             </div>
             
             <form id="supportForm">
@@ -352,9 +352,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mostrar la URL actual
-            document.getElementById('current-url').textContent = window.location.href;
-            
             // Obtener parámetros de la URL
             const urlParams = new URLSearchParams(window.location.search);
             const modelo = urlParams.get('modelo');
