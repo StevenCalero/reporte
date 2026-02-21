@@ -1,301 +1,679 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miguelito Sabor Peruano - Pedidos</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=1200') fixed;
-            background-size: cover;
-            padding: 20px;
-            min-height: 100vh;
-            background-position: center;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 4px solid #ff0000;
-            backdrop-filter: blur(5px);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #ff0000, #ffffff, #ff0000);
-            border-radius: 15px;
-            border: 2px solid #ff0000;
-        }
-        
-        .header h1 {
-            color: #ff0000;
-            font-size: 32px;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .header p {
-            color: #333;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .dishes-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .dish-item {
-            text-align: center;
-            padding: 10px;
-            background: #f8f8f8;
-            border-radius: 10px;
-            border: 2px solid #ff0000;
-        }
-        
-        .dish-item img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #ff0000;
-        }
-        
-        .dish-name {
-            font-size: 12px;
-            font-weight: bold;
-            color: #ff0000;
-            margin-top: 5px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard de Impresión</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:#0a0c10; --surface:#111318; --surface2:#181c24; --border:#1f2530;
+    --accent:#e8c547; --accent2:#4fc3f7; --accent3:#f06292;
+    --text:#e8eaf0; --muted:#7a8399; --green:#69f0ae; --red:#ff5252;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;padding:2rem;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
+  .wrap{max-width:1400px;margin:0 auto;position:relative;z-index:1;}
 
-        .logo {
-    width: 170px;
-    height: 170px;
-    border-radius: 50%;
-    border: 4px solid #ff0000;
-    margin-bottom: 15px;
-    object-fit: cover;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #ff0000;
-            font-size: 16px;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 15px;
-            border: 3px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: #ff0000;
-            outline: none;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
-        }
-        
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: white;
-            padding: 20px;
-            border: none;
-            border-radius: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-        }
-        
-        .btn-whatsapp:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.6);
-        }
-        
-        .whatsapp-icon {
-            margin-right: 10px;
-            font-size: 24px;
-        }
-        
-        .required {
-            color: #ff0000;
-            font-size: 18px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .dishes-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .header h1 {
-                font-size: 28px;
-            }
-        }
-    </style>
+  /* ─── LOADING ─── */
+  #overlay{display:none;position:fixed;inset:0;background:rgba(10,12,16,.88);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+  #overlay.on{display:flex;}
+  .spin{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+  .spin-lbl{font-size:.7rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ─── SETUP PANEL ─── */
+  #setup{background:var(--surface);border:1px solid var(--accent);padding:2rem;margin-bottom:2rem;}
+  #setup.hidden{display:none;}
+  .s-title{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--accent);margin-bottom:.25rem;}
+  .s-sub{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:1.5rem;}
+
+  .steps{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem;}
+  .step{display:flex;gap:1rem;align-items:flex-start;}
+  .sn{width:26px;height:26px;background:var(--accent);color:#0a0c10;font-size:.72rem;font-weight:700;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .sb{font-size:.74rem;line-height:1.75;color:var(--text);}
+  .sb b{color:var(--accent);}
+  .sb code{background:var(--surface2);padding:.1rem .45rem;border-radius:2px;color:var(--accent2);font-size:.68rem;}
+
+  .field-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:.35rem;}
+  .field-wrap{display:flex;gap:.6rem;margin-bottom:.75rem;}
+  .field-wrap input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;padding:.65rem 1rem;border-radius:2px;outline:none;transition:border-color .2s;}
+  .field-wrap input:focus{border-color:var(--accent);}
+
+  .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem;}
+  .btn{padding:.6rem 1.2rem;border:none;border-radius:2px;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity .2s;}
+  .btn:hover{opacity:.82;}
+  .btn-primary{background:var(--accent);color:#0a0c10;}
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-danger{background:var(--red);color:#fff;}
+
+  #msg{font-size:.68rem;margin-top:.75rem;min-height:1.1rem;}
+  #msg.ok{color:var(--green);}  #msg.err{color:var(--red);}  #msg.loading{color:var(--accent2);}
+
+  .conn-bar{display:none;align-items:center;gap:1rem;margin-top:1rem;padding:.7rem 1rem;border:1px solid var(--green);background:var(--surface2);}
+  .conn-bar.on{display:flex;}
+  .conn-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;}
+  .conn-url{flex:1;font-size:.62rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  .fmt{margin-top:1.5rem;padding:1rem 1.25rem;background:var(--surface2);border-left:3px solid var(--accent2);font-size:.67rem;line-height:1.9;color:var(--muted);}
+  .fmt b{color:var(--accent2);}
+  .fmt table{margin-top:.6rem;border-collapse:collapse;width:100%;}
+  .fmt th,.fmt td{padding:.28rem .7rem;border:1px solid var(--border);font-size:.62rem;text-align:left;}
+  .fmt th{color:var(--accent);background:var(--surface);}
+
+  /* ─── TOGGLE BTN ─── */
+  #setupToggle{display:none;margin-bottom:1.5rem;}
+
+  /* ─── EMPTY STATE ─── */
+  #empty{display:none;text-align:center;padding:4rem 2rem;color:var(--muted);}
+  #empty.on{display:block;}
+  #empty h2{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--border);margin-bottom:.75rem;}
+  #empty p{font-size:.72rem;}
+
+  /* ─── DASHBOARD ─── */
+  #dash{display:none;}
+  #dash.on{display:block;}
+
+  header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .ttl h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3.2rem);line-height:1;letter-spacing:-1px;}
+  .ttl h1 span{color:var(--accent);font-style:italic;}
+  .ttl p{color:var(--muted);font-size:.72rem;margin-top:.5rem;letter-spacing:2px;text-transform:uppercase;}
+  .hright{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;}
+  .badge{display:inline-block;padding:.28rem .75rem;border:1px solid var(--border);border-radius:2px;font-size:.6rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+  .badge.live{border-color:var(--green);color:var(--green);}
+  #lastUp{font-size:.58rem;color:var(--muted);}
+
+  /* filter */
+  .fbar{display:flex;align-items:center;gap:.6rem;margin-bottom:1.75rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);flex-wrap:wrap;}
+  .flbl{font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-right:.4rem;flex-shrink:0;}
+  .fbtn{padding:.38rem .9rem;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .15s;text-transform:uppercase;}
+  .fbtn:hover{border-color:var(--accent);color:var(--accent);}
+  .fbtn.active{background:var(--accent);color:#0a0c10;border-color:var(--accent);font-weight:600;}
+
+  /* kpi */
+  .krow{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem;}
+  .kpi{background:var(--surface);border:1px solid var(--border);padding:1.4rem;position:relative;overflow:hidden;}
+  .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+  .kpi:nth-child(1)::after{background:var(--accent);}
+  .kpi:nth-child(2)::after{background:var(--accent2);}
+  .kpi:nth-child(3)::after{background:var(--accent3);}
+  .kpi:nth-child(4)::after{background:var(--green);}
+  .klbl{font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:.65rem;}
+  .kval{font-family:'DM Serif Display',serif;font-size:2rem;line-height:1;}
+  .ksub{font-size:.6rem;color:var(--muted);margin-top:.45rem;}
+
+  /* cards */
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+  .card{background:var(--surface);border:1px solid var(--border);padding:1.6rem;}
+  .chead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;}
+  .ctitle{font-family:'DM Serif Display',serif;font-size:1.2rem;line-height:1.2;}
+  .ctitle span{font-style:italic;color:var(--accent);}
+  .csub{color:var(--muted);font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;margin-top:.22rem;}
+  .cwrap{position:relative;height:270px;}
+  .legend{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.9rem;}
+  .li{display:flex;align-items:center;gap:.45rem;font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .ld{width:8px;height:8px;border-radius:1px;flex-shrink:0;}
+
+  /* mix */
+  .mbars{display:flex;flex-direction:column;gap:1.1rem;}
+  .mrow{display:flex;flex-direction:column;gap:.38rem;opacity:.32;transition:opacity .3s;}
+  .mrow.on{opacity:1;}
+  .minfo{display:flex;justify-content:space-between;font-size:.68rem;align-items:center;}
+  .mtrack{height:7px;background:var(--border);border-radius:1px;overflow:hidden;display:flex;}
+  .mbn{background:var(--accent);height:100%;}
+  .mclr{background:var(--accent3);height:100%;}
+  .mnums{display:flex;justify-content:space-between;font-size:.58rem;color:var(--muted);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .kpi{animation:fadeUp .5s ease both;}
+  .kpi:nth-child(1){animation-delay:.05s} .kpi:nth-child(2){animation-delay:.1s}
+  .kpi:nth-child(3){animation-delay:.15s} .kpi:nth-child(4){animation-delay:.2s}
+
+  @media(max-width:900px){.krow{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start;gap:1rem}}
+</style>
 </head>
 <body>
-    <div class="header">
-    <img src="Logo.jpeg" alt="Miguelito Sabor Peruano" class="logo">
-    <p>¡Llena el tus datos y solicita tu pedido directamente por WhatsApp!</p>
+
+<!-- LOADING -->
+<div id="overlay">
+  <div class="spin"></div>
+  <div class="spin-lbl">Cargando datos desde Google Sheets…</div>
 </div>
-        
-        <form id="pedidoForm">
-            <div class="form-group">
-                <label for="nombre">Nombre completo <span class="required">*</span></label>
-                <input type="text" id="nombre" required placeholder="👤 Tu nombre completo">
-            </div>
-            
-            <div class="form-group">
-                <label for="telefono">Teléfono de contacto <span class="required">*</span></label>
-                <input type="tel" id="telefono" required placeholder="📞 +51 999 888 777">
-            </div>
-            
-            <div class="form-group">
-                <label for="direccion">Dirección de envío <span class="required">*</span></label>
-                <textarea id="direccion" required rows="3" placeholder="🏠 Dirección completa y referencia"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="entrada">Entrada 🥗</label>
-                <select id="entrada">
-                    <option value="">Selecciona  entrada</option>
-                    <option value="Causa">Causa Rellena </option>
-                    
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="fondo">Plato de Fondo 🍛</label>
-                <select id="fondo">
-                    <option value="">Selecciona un plato principal</option>
-                    <option value="Lomo Saltado">Lomo Saltado 🥩</option>
-                    <option value="Ají de Gallina">Ají de Gallina 🐔</option>
-                    
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="bebida">Bebida 🥤</label>
-                <select id="bebida">
-                    <option value="">Selecciona una bebida</option>
-                    <option value="Chicha Morada">Chicha Morada 🍇</option>
-                    <option value="Maracuyá">Jugo de Maracuyá 🍹</option>
-                   
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="horario">Horario de entrega 🕒</label>
-                <input type="time" id="horario">
-            </div>
-            
-            <div class="form-group">
-                <label for="pago">Método de pago 💰</label>
-                <select id="pago">
-                    <option value="Efectivo">Efectivo 💵</option>
-                    <option value="Yape">Yape 📱</option>
-                    <option value="Plin">Plin 📲</option>
-                    <option value="Transferencia">Transferencia 🏦</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="comentarios">Comentarios adicionales 💬</label>
-                <textarea id="comentarios" rows="3" placeholder="🌶️ Especificaciones especiales, alergias, etc."></textarea>
-            </div>
-            
-            <button type="button" onclick="enviarWhatsApp()" class="btn-whatsapp">
-                <span class="whatsapp-icon">📱</span> ENVIAR PEDIDO POR WHATSAPP
-            </button>
-        </form>
+
+<div class="wrap">
+
+  <!-- ════════════════════════════════════════
+       PANEL DE CONFIGURACIÓN
+       Solo el encargado lo usa (una vez)
+  ════════════════════════════════════════ -->
+  <div id="setup">
+    <div class="s-title">⚙ Conectar con Google Sheets</div>
+    <div class="s-sub">El encargado hace esto una sola vez · Los demás solo abren el archivo HTML</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="sn">1</div>
+        <div class="sb">Abre tu Google Sheets. Ve a <b>Archivo → Compartir → Publicar en la web</b>.</div>
+      </div>
+      <div class="step">
+        <div class="sn">2</div>
+        <div class="sb">
+          Selecciona la hoja <b>Fact_Consumos</b>, elige formato <b>Valores separados por comas (.csv)</b>
+          y presiona <b>Publicar</b>. Copia el link que aparece.<br>
+          Repite lo mismo para la hoja <b>Dim_Clientes</b>.
+        </div>
+      </div>
+      <div class="step">
+        <div class="sn">3</div>
+        <div class="sb">Pega los dos links abajo y haz clic en <b>Conectar y guardar</b>.</div>
+      </div>
+      <div class="step">
+        <div class="sn">4</div>
+        <div class="sb">
+          Guarda este archivo HTML en la carpeta compartida. Cada vez que alguien lo abra,
+          el dashboard leerá los datos frescos automáticamente. <b>Para actualizar datos: solo edita el Sheets.</b>
+        </div>
+      </div>
     </div>
 
-    <script>
-        function enviarWhatsApp() {
-            // Obtener valores del formulario
-            const nombre = document.getElementById('nombre').value;
-            const telefono = document.getElementById('telefono').value;
-            const direccion = document.getElementById('direccion').value;
-            const entrada = document.getElementById('entrada').value;
-            const fondo = document.getElementById('fondo').value;
-            const bebida = document.getElementById('bebida').value;
-            const horario = document.getElementById('horario').value;
-            const pago = document.getElementById('pago').value;
-            const comentarios = document.getElementById('comentarios').value;
-            
-            // Validar campos obligatorios
-            if (!nombre || !telefono || !direccion) {
-                alert('Por favor completa los campos obligatorios (*)');
-                return;
-            }
-            
-            // Crear mensaje para WhatsApp
-            let mensaje = `¡HOLA! 👋 QUIERO HACER UN PEDIDO EN MIGUELITO SABOR PERUANO 🍛%0A%0A`;
-            mensaje += `*📌 MIS DATOS:*%0A`;
-            mensaje += `• *Nombre:* ${nombre}%0A`;
-            mensaje += `• *Teléfono:* ${telefono}%0A`;
-            mensaje += `• *Dirección:* ${direccion}%0A%0A`;
-            
-            mensaje += `*🍽️ MI PEDIDO:*%0A`;
-            if (entrada) mensaje += `• *Entrada:* ${entrada}%0A`;
-            if (fondo) mensaje += `• *Plato principal:* ${fondo}%0A`;
-            if (bebida) mensaje += `• *Bebida:* ${bebida}%0A`;
-            if (horario) mensaje += `• *Horario entrega:* ${horario}%0A`;
-            mensaje += `• *Método pago:* ${pago}%0A`;
-            if (comentarios) mensaje += `• *Comentarios:* ${comentarios}%0A`;
-            mensaje += `%0A¡GRACIAS! 😊 🇵🇪`;
-            
-            // Número de WhatsApp (reemplaza con TU número)
-            const numeroWhatsApp = '541151234032'; // ← 🔥 CAMBIA ESTE NÚMERO POR EL TUYO
-            
-            // Crear enlace de WhatsApp
-            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
-            
-            // Abrir WhatsApp
-            window.open(urlWhatsApp, '_blank');
-        }
-    </script>
+    <div class="field-lbl">📋 Link CSV — Fact_Consumos (consumos mensuales por cliente)</div>
+    <div class="field-wrap">
+      <input id="uConsumos" type="text" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=...">
+    </div>
+
+    <div class="field-lbl">📋 Link CSV — Dim_Clientes (clientes, tarifas y contratos)</div>
+    <div class="field-wrap">
+      <input id="uClientes" type="text" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=...">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="conectar()">▶ Conectar y guardar</button>
+      <button class="btn btn-ghost"   onclick="ocultarSetup()">Ocultar panel</button>
+      <button class="btn btn-danger"  onclick="desconectar()" style="margin-left:auto">✕ Desconectar</button>
+    </div>
+
+    <div id="msg"></div>
+
+    <div class="conn-bar" id="cbar">
+      <div class="conn-dot"></div>
+      <div class="conn-url" id="curl"></div>
+      <button class="btn btn-ghost" style="font-size:.6rem;padding:.28rem .65rem" onclick="recargar()">↺ Recargar ahora</button>
+    </div>
+
+    <!-- Formato esperado -->
+    <div class="fmt">
+      <b>Formato requerido en Google Sheets:</b>
+      <br>Hoja <b>Fact_Consumos</b> — columnas en fila 1:
+      <table>
+        <tr><th>ID_Registro</th><th>ID_Cliente</th><th>Fecha_Lectura</th><th>Paginas_BN</th><th>Paginas_Color</th></tr>
+        <tr><td>1</td><td>CLI001</td><td>2024-01-31</td><td>4800</td><td>800</td></tr>
+      </table>
+      <br>Hoja <b>Dim_Clientes</b> — columnas mínimas:
+      <code>ID_Cliente, Nombre_Cliente, Moneda, Modalidad, Cuota_Fija, Bolsa_BN, Bolsa_Color, Costo_Excedente_BN, Costo_Excedente_Color</code>
+    </div>
+  </div>
+
+  <!-- Botón para reabrir el panel -->
+  <div id="setupToggle">
+    <button class="btn btn-ghost" style="font-size:.63rem" onclick="mostrarSetup()">⚙ Configuración de datos</button>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty">
+    <h2>Sin datos conectados</h2>
+    <p>Configura el link de Google Sheets arriba para comenzar</p>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       DASHBOARD PRINCIPAL
+  ════════════════════════════════════════ -->
+  <div id="dash">
+
+    <header>
+      <div class="ttl">
+        <h1>Print <span>Analytics</span></h1>
+        <p>Dashboard de Consumo e Ingresos</p>
+      </div>
+      <div class="hright">
+        <span class="badge live">● En vivo · Google Sheets</span>
+        <span class="badge" id="periodoLbl">—</span>
+        <div id="lastUp"></div>
+      </div>
+    </header>
+
+    <!-- Filtro cliente -->
+    <div class="fbar">
+      <span class="flbl">▶ Cliente:</span>
+      <div id="fbuts" style="display:flex;gap:.55rem;flex-wrap:wrap;">
+        <button class="fbtn active" data-cli="ALL" onclick="setFiltro('ALL')">Todos</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="krow">
+      <div class="kpi">
+        <div class="klbl">Total Páginas BN</div>
+        <div class="kval" id="kbn" style="color:var(--accent)">—</div>
+        <div class="ksub">Período seleccionado</div>
+      </div>
+      <div class="kpi">
+        <div class="klbl">Total Páginas Color</div>
+        <div class="kval" id="kclr" style="color:var(--accent2)">—</div>
+        <div class="ksub">Período seleccionado</div>
+      </div>
+      <div class="kpi">
+        <div class="klbl">Facturación Total</div>
+        <div class="kval" id="kfact" style="color:var(--accent3)">—</div>
+        <div class="ksub" id="kfactsub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="klbl">Meses Registrados</div>
+        <div class="kval" id="kmes" style="color:var(--green)">—</div>
+        <div class="ksub" id="kmessub">—</div>
+      </div>
+    </div>
+
+    <!-- Charts row 1 -->
+    <div class="g2">
+      <div class="card">
+        <div class="chead"><div>
+          <div class="ctitle">Consumo Mensual <span>Total</span></div>
+          <div class="csub">BN vs Color · Páginas</div>
+        </div></div>
+        <div class="cwrap"><canvas id="cConsumo"></canvas></div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:var(--accent)"></div>Blanco y Negro</div>
+          <div class="li"><div class="ld" style="background:var(--accent3)"></div>Color</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chead"><div>
+          <div class="ctitle">Facturación <span>Desglosada</span></div>
+          <div class="csub">Cuota Fija vs Excedentes</div>
+        </div></div>
+        <div class="cwrap"><canvas id="cFact"></canvas></div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:var(--accent)"></div>Cuota Fija</div>
+          <div class="li"><div class="ld" style="background:var(--accent2)"></div>Excedentes / Consumo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts row 2 -->
+    <div class="g2">
+      <div class="card">
+        <div class="chead"><div>
+          <div class="ctitle">Facturación por <span>Cliente</span></div>
+          <div class="csub">Valor total por cuenta</div>
+        </div></div>
+        <div class="cwrap"><canvas id="cCli"></canvas></div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:var(--green)"></div>Soles (PEN)</div>
+          <div class="li"><div class="ld" style="background:var(--accent2)"></div>Dólares (USD)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chead"><div>
+          <div class="ctitle">Mix de Consumo <span>por Cliente</span></div>
+          <div class="csub">BN vs Color · Proporción</div>
+        </div></div>
+        <div class="mbars" id="mixBars"></div>
+      </div>
+    </div>
+
+  </div><!-- /dash -->
+</div><!-- /wrap -->
+
+<script>
+// ══════════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════════
+let DATA    = [];   // consumos enriquecidos
+let CLIMAP  = {};   // { CLI001: { nombre, moneda, cuota, ... } }
+let MESES   = [];   // etiquetas X ordenadas
+let filtro  = 'ALL';
+let ch1, ch2, ch3;
+
+const SK1 = 'prt_url_consumos';
+const SK2 = 'prt_url_clientes';
+
+// ══════════════════════════════════════════════════════════
+// PANEL UI
+// ══════════════════════════════════════════════════════════
+const loading = on => document.getElementById('overlay').classList.toggle('on', on);
+const msg     = (txt, cls) => { const e=document.getElementById('msg'); e.textContent=txt; e.className=cls||''; };
+
+function ocultarSetup(){
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('setupToggle').style.display='block';
+}
+function mostrarSetup(){
+  document.getElementById('setup').classList.remove('hidden');
+  document.getElementById('setupToggle').style.display='none';
+}
+function connBar(url){
+  document.getElementById('cbar').classList.add('on');
+  document.getElementById('curl').textContent = '🔗 ' + (url.length>90 ? url.slice(0,90)+'…' : url);
+}
+
+// ══════════════════════════════════════════════════════════
+// CONEXIÓN
+// ══════════════════════════════════════════════════════════
+async function conectar(){
+  const u1 = document.getElementById('uConsumos').value.trim();
+  const u2 = document.getElementById('uClientes').value.trim();
+  if (!u1 || !u2) return msg('⚠ Pega ambos links CSV antes de continuar.','err');
+  if (!u1.includes('docs.google.com') || !u2.includes('docs.google.com'))
+    return msg('⚠ Los links deben ser de Google Sheets (docs.google.com).','err');
+  msg('Verificando conexión…','loading');
+  loading(true);
+  try {
+    await cargar(u1,u2);
+    localStorage.setItem(SK1,u1);
+    localStorage.setItem(SK2,u2);
+    msg('✓ Conectado. Datos cargados correctamente.','ok');
+    connBar(u1);
+  } catch(e){
+    msg('✕ '+e.message,'err');
+  } finally { loading(false); }
+}
+
+async function recargar(){
+  const u1=localStorage.getItem(SK1), u2=localStorage.getItem(SK2);
+  if (!u1||!u2) return;
+  loading(true);
+  try {
+    await cargar(u1,u2);
+    msg('✓ Datos actualizados · '+new Date().toLocaleTimeString('es-PE'),'ok');
+  } catch(e){ msg('✕ '+e.message,'err'); }
+  finally { loading(false); }
+}
+
+function desconectar(){
+  localStorage.removeItem(SK1); localStorage.removeItem(SK2);
+  DATA=[]; CLIMAP={}; MESES=[];
+  if(ch1){ch1.destroy();ch1=null;} if(ch2){ch2.destroy();ch2=null;} if(ch3){ch3.destroy();ch3=null;}
+  document.getElementById('cbar').classList.remove('on');
+  document.getElementById('dash').classList.remove('on');
+  document.getElementById('empty').classList.add('on');
+  msg('Desconectado.','');
+}
+
+// ══════════════════════════════════════════════════════════
+// PARSEO CSV
+// ══════════════════════════════════════════════════════════
+function parseCSV(txt){
+  const rows = txt.trim().split('\n').map(l=>l.split(',').map(c=>c.trim().replace(/^"|"$/g,'')));
+  const hdr  = rows[0];
+  return rows.slice(1).filter(r=>r.length>=hdr.length && r[0]).map(r=>{
+    const o={}; hdr.forEach((h,i)=>o[h]=r[i]||''); return o;
+  });
+}
+
+function mesLabel(f){
+  const d=new Date(f.includes('/')? f.split('/').reverse().join('-') : f);
+  return isNaN(d)? f : d.toLocaleString('es-PE',{month:'short',year:'2-digit'});
+}
+function mesSort(a,b){
+  const M=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const p=s=>{ const [m,y]=s.toLowerCase().split(' '); return parseInt(y)*12+M.indexOf(m); };
+  return p(a)-p(b);
+}
+
+async function cargar(u1,u2){
+  const [r1,r2] = await Promise.all([fetch(u1),fetch(u2)]);
+  if(!r1.ok) throw new Error('No se pudo leer Fact_Consumos. ¿Está publicado como CSV?');
+  if(!r2.ok) throw new Error('No se pudo leer Dim_Clientes. ¿Está publicado como CSV?');
+
+  const cRaw = parseCSV(await r1.text());
+  const kRaw = parseCSV(await r2.text());
+
+  // Mapa clientes
+  CLIMAP={};
+  kRaw.forEach(r=>{
+    CLIMAP[r.ID_Cliente]={
+      nombre:   r.Nombre_Cliente,
+      moneda:   r.Moneda,
+      cuota:    +r.Cuota_Fija||0,
+      bolsaBN:  +r.Bolsa_BN||0,
+      bolsaCLR: +r.Bolsa_Color||0,
+      exBN:     +r.Costo_Excedente_BN||0,
+      exCLR:    +r.Costo_Excedente_Color||0,
+    };
+  });
+
+  // Enriquecer consumos
+  DATA = cRaw.map(r=>{
+    const c=CLIMAP[r.ID_Cliente]||{};
+    return {
+      cli:    r.ID_Cliente,
+      nombre: c.nombre||r.ID_Cliente,
+      mes:    mesLabel(r.Fecha_Lectura),
+      bn:     +r.Paginas_BN||0,
+      color:  +r.Paginas_Color||0,
+      moneda: c.moneda||'Soles',
+      cuota:  c.cuota||0, bolsaBN:c.bolsaBN||0, bolsaCLR:c.bolsaCLR||0,
+      exBN:   c.exBN||0,  exCLR:c.exCLR||0,
+    };
+  });
+
+  MESES = [...new Set(DATA.map(r=>r.mes))].sort(mesSort);
+
+  // Periodo en header
+  document.getElementById('periodoLbl').textContent =
+    MESES.length ? `${MESES[0]} – ${MESES[MESES.length-1]}` : '—';
+  document.getElementById('lastUp').textContent =
+    'Actualizado: '+new Date().toLocaleString('es-PE');
+
+  construirFiltros();
+  renderAll();
+
+  document.getElementById('empty').classList.remove('on');
+  document.getElementById('dash').classList.add('on');
+}
+
+// ══════════════════════════════════════════════════════════
+// FILTROS
+// ══════════════════════════════════════════════════════════
+const CLI_PALETA = ['var(--green)','var(--accent2)','var(--accent3)','#ce93d8','#ffb74d','#80cbc4'];
+
+function construirFiltros(){
+  const keys = [...new Set(DATA.map(r=>r.cli))];
+  const cont = document.getElementById('fbuts');
+  cont.innerHTML = `<button class="fbtn active" data-cli="ALL" onclick="setFiltro('ALL')">Todos</button>`;
+  keys.forEach((k,i)=>{
+    const nombre = CLIMAP[k]?.nombre||k;
+    const corto  = nombre.split(' ').slice(0,2).join(' ');
+    const color  = CLI_PALETA[i%CLI_PALETA.length];
+    const b = document.createElement('button');
+    b.className='fbtn'; b.dataset.cli=k; b.textContent=corto;
+    b.onclick=()=> setFiltro(k, b, color);
+    cont.appendChild(b);
+  });
+}
+
+function setFiltro(cli, btnEl, color){
+  filtro = cli;
+  document.querySelectorAll('.fbtn').forEach(b=>{
+    b.classList.remove('active');
+    b.style.background=b.style.borderColor=b.style.color='';
+  });
+  if(cli==='ALL'){
+    cont.querySelector('[data-cli="ALL"]').classList.add('active');
+  } else if(btnEl){
+    btnEl.classList.add('active');
+    btnEl.style.background  = color;
+    btnEl.style.borderColor = color;
+    btnEl.style.color       = '#0a0c10';
+  }
+  renderAll();
+}
+
+// ══════════════════════════════════════════════════════════
+// FACTURACIÓN
+// ══════════════════════════════════════════════════════════
+function fact(r){
+  const cuota=r.cuota;
+  let exc = r.cuota===0
+    ? r.bn*r.exBN + r.color*r.exCLR
+    : (r.bn>r.bolsaBN?(r.bn-r.bolsaBN)*r.exBN:0)+(r.color>r.bolsaCLR?(r.color-r.bolsaCLR)*r.exCLR:0);
+  return {cuota, exc, total:cuota+exc};
+}
+
+function getFilt(){ return filtro==='ALL'? DATA : DATA.filter(r=>r.cli===filtro); }
+
+// ══════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════
+function renderAll(){
+  const d=getFilt();
+  renderKPIs(d); renderConsumo(d); renderFact(d); renderCli(d); renderMix();
+}
+
+function renderKPIs(d){
+  const bn   =d.reduce((s,r)=>s+r.bn,0);
+  const clr  =d.reduce((s,r)=>s+r.color,0);
+  const soles=d.filter(r=>r.moneda==='Soles').reduce((s,r)=>s+fact(r).total,0);
+  const usd  =d.filter(r=>r.moneda==='Dólares').reduce((s,r)=>s+fact(r).total,0);
+  const meses=[...new Set(d.map(r=>r.mes))].sort(mesSort);
+
+  document.getElementById('kbn').textContent  = bn.toLocaleString('es-PE');
+  document.getElementById('kclr').textContent = clr.toLocaleString('es-PE');
+
+  if(soles>0&&usd>0){
+    document.getElementById('kfact').textContent   =`S/ ${Math.round(soles).toLocaleString('es-PE')}`;
+    document.getElementById('kfactsub').textContent=`+ USD ${usd.toFixed(2)}`;
+  } else if(soles>0){
+    document.getElementById('kfact').textContent   =`S/ ${soles.toFixed(2)}`;
+    document.getElementById('kfactsub').textContent='Moneda: Soles';
+  } else if(usd>0){
+    document.getElementById('kfact').textContent   =`USD ${usd.toFixed(2)}`;
+    document.getElementById('kfactsub').textContent='Moneda: Dólares';
+  } else {
+    document.getElementById('kfact').textContent='—';
+    document.getElementById('kfactsub').textContent='';
+  }
+
+  document.getElementById('kmes').textContent   = meses.length;
+  document.getElementById('kmessub').textContent = meses.join(' · ');
+}
+
+const bopts=()=>({
+  responsive:true, maintainAspectRatio:false, animation:{duration:320},
+  plugins:{legend:{display:false}},
+  scales:{
+    x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}}}
+  }
+});
+
+function renderConsumo(d){
+  const bn  =MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.bn,0));
+  const clr =MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.color,0));
+  if(!ch1){
+    ch1=new Chart(document.getElementById('cConsumo'),{type:'bar',data:{labels:MESES,datasets:[
+      {label:'BN',  data:bn,  backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
+      {label:'Clr', data:clr, backgroundColor:'rgba(240,98,146,.85)',borderRadius:2,stack:'s'},
+    ]},options:bopts()});
+  } else {
+    ch1.data.labels=MESES;
+    ch1.data.datasets[0].data=bn; ch1.data.datasets[1].data=clr; ch1.update();
+  }
+}
+
+function renderFact(d){
+  const cuota=MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+fact(r).cuota,0));
+  const exc  =MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+fact(r).exc,0));
+  if(!ch2){
+    ch2=new Chart(document.getElementById('cFact'),{type:'bar',data:{labels:MESES,datasets:[
+      {label:'Cuota',data:cuota,backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
+      {label:'Exc',  data:exc,  backgroundColor:'rgba(79,195,247,.85)', borderRadius:2,stack:'s'},
+    ]},options:bopts()});
+  } else {
+    ch2.data.labels=MESES;
+    ch2.data.datasets[0].data=cuota; ch2.data.datasets[1].data=exc; ch2.update();
+  }
+}
+
+function renderCli(d){
+  const keys  =[...new Set(DATA.map(r=>r.cli))];
+  const totals=keys.map(k=>d.filter(r=>r.cli===k).reduce((s,r)=>s+fact(r).total,0));
+  const names =keys.map(k=>(CLIMAP[k]?.nombre||k).split(' ').slice(0,2).join(' '));
+  const colors=keys.map(k=>{
+    const act=filtro==='ALL'||filtro===k;
+    const base=CLIMAP[k]?.moneda==='Soles'?'105,240,174':'79,195,247';
+    return `rgba(${base},${act?.85:.2})`;
+  });
+  if(!ch3){
+    ch3=new Chart(document.getElementById('cCli'),{type:'bar',data:{labels:names,datasets:[
+      {label:'Total',data:totals,backgroundColor:colors,borderRadius:3}
+    ]},options:bopts()});
+  } else {
+    ch3.data.labels=names;
+    ch3.data.datasets[0].data=totals;
+    ch3.data.datasets[0].backgroundColor=colors;
+    ch3.update();
+  }
+}
+
+function renderMix(){
+  const keys=[...new Set(DATA.map(r=>r.cli))];
+  const cont=document.getElementById('mixBars');
+  cont.innerHTML='';
+  keys.forEach(k=>{
+    const rows=DATA.filter(r=>r.cli===k);
+    const bn=rows.reduce((s,r)=>s+r.bn,0);
+    const cl=rows.reduce((s,r)=>s+r.color,0);
+    const tot=bn+cl;
+    const pBN=(tot?(bn/tot*100):0).toFixed(1);
+    const pCL=(tot?(cl/tot*100):0).toFixed(1);
+    const mon=CLIMAP[k]?.moneda==='Soles'?'🟢 Soles':'🔵 USD';
+    const act=filtro==='ALL'||filtro===k;
+    const div=document.createElement('div');
+    div.className=`mrow${act?' on':''}`;
+    div.innerHTML=`
+      <div class="minfo">
+        <span style="color:var(--text)">${CLIMAP[k]?.nombre||k}</span>
+        <span style="font-size:.58rem;color:var(--muted)">${mon} · BN ${pBN}% / Color ${pCL}%</span>
+      </div>
+      <div class="mtrack"><div class="mbn" style="width:${pBN}%"></div><div class="mclr" style="width:${pCL}%"></div></div>
+      <div class="mnums"><span>${bn.toLocaleString('es-PE')} págs BN</span><span>${cl.toLocaleString('es-PE')} págs Color</span></div>`;
+    cont.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// INICIO AUTOMÁTICO
+// ══════════════════════════════════════════════════════════
+(async()=>{
+  const u1=localStorage.getItem(SK1), u2=localStorage.getItem(SK2);
+  if(u1&&u2){
+    document.getElementById('uConsumos').value=u1;
+    document.getElementById('uClientes').value=u2;
+    ocultarSetup();
+    loading(true);
+    try {
+      await cargar(u1,u2);
+      connBar(u1);
+    } catch(e){
+      document.getElementById('empty').classList.add('on');
+      document.getElementById('empty').querySelector('p').textContent=
+        'Error al cargar: '+e.message+' — Abre ⚙ Configuración para reconectar.';
+      mostrarSetup();
+    } finally { loading(false); }
+  } else {
+    document.getElementById('empty').classList.add('on');
+  }
+})();
+</script>
 </body>
 </html>
+
+
 
 
 
