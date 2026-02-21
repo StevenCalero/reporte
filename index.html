@@ -404,66 +404,162 @@ function desconectar(){
 }
 
 // ══════════════════════════════════════════════════════════
-// PARSEO CSV
+// PARSEO CSV ROBUSTO
 // ══════════════════════════════════════════════════════════
+
+// Normaliza un nombre de columna: sin espacios, sin tildes, minúsculas
+function norm(s){ 
+  return (s||'').toLowerCase()
+    .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
+    .replace(/[^a-z0-9]/g,'');
+}
+
+// Busca la clave real del objeto que más se parezca a los alias dados
+function col(obj, ...aliases){
+  const normObj = {};
+  Object.keys(obj).forEach(k => normObj[norm(k)] = obj[k]);
+  for(const a of aliases){
+    const v = normObj[norm(a)];
+    if(v !== undefined) return v;
+  }
+  return '';
+}
+
 function parseCSV(txt){
-  const rows = txt.trim().split('\n').map(l=>l.split(',').map(c=>c.trim().replace(/^"|"$/g,'')));
+  // Manejar tanto \r\n (Windows) como \n
+  const lines = txt.trim().split(/\r?\n/);
+  // Separar por coma pero respetar campos entre comillas
+  const splitLine = l => {
+    const res=[]; let cur='', inQ=false;
+    for(const ch of l){
+      if(ch==='"'){ inQ=!inQ; }
+      else if(ch===','&&!inQ){ res.push(cur.trim()); cur=''; }
+      else cur+=ch;
+    }
+    res.push(cur.trim());
+    return res;
+  };
+  const rows = lines.map(splitLine);
   const hdr  = rows[0];
-  return rows.slice(1).filter(r=>r.length>=hdr.length && r[0]).map(r=>{
-    const o={}; hdr.forEach((h,i)=>o[h]=r[i]||''); return o;
-  });
+  return {
+    headers: hdr,
+    rows: rows.slice(1).filter(r=>r.some(c=>c!=='')).map(r=>{
+      const o={}; hdr.forEach((h,i)=>o[h]=(r[i]||'').trim()); return o;
+    })
+  };
 }
 
 function mesLabel(f){
-  const d=new Date(f.includes('/')? f.split('/').reverse().join('-') : f);
-  return isNaN(d)? f : d.toLocaleString('es-PE',{month:'short',year:'2-digit'});
+  if(!f || typeof f !== 'string') return '?';
+  const clean = f.trim();
+  // Intentar parsear AAAA-MM-DD o DD/MM/AAAA
+  let d;
+  if(/^\d{4}-\d{2}-\d{2}/.test(clean)){
+    d = new Date(clean.slice(0,10));
+  } else if(/^\d{2}\/\d{2}\/\d{4}/.test(clean)){
+    const [dd,mm,yyyy] = clean.split('/');
+    d = new Date(`${yyyy}-${mm}-${dd}`);
+  } else {
+    d = new Date(clean);
+  }
+  if(isNaN(d.getTime())) return clean;
+  return d.toLocaleString('es-PE',{month:'short',year:'2-digit'});
 }
+
 function mesSort(a,b){
   const M=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const p=s=>{ const [m,y]=s.toLowerCase().split(' '); return parseInt(y)*12+M.indexOf(m); };
+  const p=s=>{
+    const parts = s.toLowerCase().split(' ');
+    const mi = M.findIndex(m => parts[0].startsWith(m));
+    const y  = parseInt(parts[1]||'0');
+    return y*12+(mi>=0?mi:0);
+  };
   return p(a)-p(b);
+}
+
+// Muestra panel de debug con las columnas recibidas
+function mostrarDebug(hdrConsumos, hdrClientes){
+  const existing = document.getElementById('debugPanel');
+  if(existing) existing.remove();
+  const div = document.createElement('div');
+  div.id = 'debugPanel';
+  div.style.cssText = 'background:#1a0a0a;border:1px solid var(--red);padding:1.25rem 1.5rem;margin-top:1rem;font-size:.68rem;line-height:1.9;';
+  div.innerHTML = `
+    <div style="color:var(--red);font-weight:700;margin-bottom:.5rem;">🔍 Columnas detectadas en tu Google Sheets:</div>
+    <div style="color:var(--accent2);margin-bottom:.3rem;"><b>Fact_Consumos:</b> ${hdrConsumos.map(h=>`<span style="background:#111;padding:.1rem .4rem;border-radius:2px;margin:0 .15rem">${h}</span>`).join('')}</div>
+    <div style="color:var(--green);"><b>Dim_Clientes:</b> ${hdrClientes.map(h=>`<span style="background:#111;padding:.1rem .4rem;border-radius:2px;margin:0 .15rem">${h}</span>`).join('')}</div>
+    <div style="color:var(--muted);margin-top:.75rem;font-size:.63rem;">
+      ↑ Verifica que los nombres coincidan con los requeridos. Las diferencias de mayúsculas y tildes son toleradas automáticamente.
+      Si ves columnas vacías o con nombres raros, puede ser que el Sheets tenga celdas extra al inicio.
+    </div>`;
+  document.getElementById('msg').after(div);
 }
 
 async function cargar(u1,u2){
   const [r1,r2] = await Promise.all([fetch(u1),fetch(u2)]);
-  if(!r1.ok) throw new Error('No se pudo leer Fact_Consumos. ¿Está publicado como CSV?');
-  if(!r2.ok) throw new Error('No se pudo leer Dim_Clientes. ¿Está publicado como CSV?');
+  if(!r1.ok) throw new Error(`No se pudo leer Fact_Consumos (HTTP ${r1.status}). ¿Está publicado como CSV?`);
+  if(!r2.ok) throw new Error(`No se pudo leer Dim_Clientes (HTTP ${r2.status}). ¿Está publicado como CSV?`);
 
-  const cRaw = parseCSV(await r1.text());
-  const kRaw = parseCSV(await r2.text());
+  const txt1 = await r1.text();
+  const txt2 = await r2.text();
 
-  // Mapa clientes
+  const parsed1 = parseCSV(txt1);
+  const parsed2 = parseCSV(txt2);
+
+  // Siempre mostrar las columnas detectadas para facilitar diagnóstico
+  mostrarDebug(parsed1.headers, parsed2.headers);
+
+  if(parsed1.rows.length === 0) throw new Error('Fact_Consumos está vacío o no tiene datos en la fila 2 en adelante.');
+  if(parsed2.rows.length === 0) throw new Error('Dim_Clientes está vacío o no tiene datos en la fila 2 en adelante.');
+
+  // ── Mapa clientes (tolerante a variaciones en nombres de columna) ──
   CLIMAP={};
-  kRaw.forEach(r=>{
-    CLIMAP[r.ID_Cliente]={
-      nombre:   r.Nombre_Cliente,
-      moneda:   r.Moneda,
-      cuota:    +r.Cuota_Fija||0,
-      bolsaBN:  +r.Bolsa_BN||0,
-      bolsaCLR: +r.Bolsa_Color||0,
-      exBN:     +r.Costo_Excedente_BN||0,
-      exCLR:    +r.Costo_Excedente_Color||0,
+  parsed2.rows.forEach(r=>{
+    const id = col(r,'ID_Cliente','IDCliente','id_cliente','cliente_id','id','codigo');
+    if(!id) return;
+    CLIMAP[id.trim()]={
+      nombre:  col(r,'Nombre_Cliente','NombreCliente','nombre_cliente','nombre','razon_social','cliente') || id,
+      moneda:  col(r,'Moneda','moneda','currency') || 'Soles',
+      cuota:   +col(r,'Cuota_Fija','CuotaFija','cuota_fija','cuota','fijo') || 0,
+      bolsaBN: +col(r,'Bolsa_BN','BolsaBN','bolsa_bn','bolsa bn','paginas_bn_incluidas') || 0,
+      bolsaCLR:+col(r,'Bolsa_Color','BolsaColor','bolsa_color','bolsa color') || 0,
+      exBN:    +col(r,'Costo_Excedente_BN','CostoExcedenteBN','costo_excedente_bn','excedente_bn','precio_bn') || 0,
+      exCLR:   +col(r,'Costo_Excedente_Color','CostoExcedenteColor','costo_excedente_color','excedente_color','precio_color') || 0,
     };
   });
 
-  // Enriquecer consumos
-  DATA = cRaw.map(r=>{
-    const c=CLIMAP[r.ID_Cliente]||{};
+  if(Object.keys(CLIMAP).length === 0)
+    throw new Error('No se encontró la columna ID_Cliente en Dim_Clientes. Columnas recibidas: ' + parsed2.headers.join(', '));
+
+  // ── Enriquecer consumos ──
+  DATA = parsed2.rows.length > 0 ? parsed1.rows.map(r=>{
+    const id = col(r,'ID_Cliente','IDCliente','id_cliente','cliente_id','id','codigo');
+    const fecha = col(r,'Fecha_Lectura','FechaLectura','fecha_lectura','fecha','date','periodo');
+    const bn    = col(r,'Paginas_BN','PaginasBN','paginas_bn','bn','blanco_negro','byn');
+    const clr   = col(r,'Paginas_Color','PaginasColor','paginas_color','color','colour');
+
+    const cid = (id||'').trim();
+    const c   = CLIMAP[cid] || {};
     return {
-      cli:    r.ID_Cliente,
-      nombre: c.nombre||r.ID_Cliente,
-      mes:    mesLabel(r.Fecha_Lectura),
-      bn:     +r.Paginas_BN||0,
-      color:  +r.Paginas_Color||0,
-      moneda: c.moneda||'Soles',
-      cuota:  c.cuota||0, bolsaBN:c.bolsaBN||0, bolsaCLR:c.bolsaCLR||0,
-      exBN:   c.exBN||0,  exCLR:c.exCLR||0,
+      cli:    cid,
+      nombre: c.nombre || cid,
+      mes:    mesLabel(fecha),
+      bn:     +bn || 0,
+      color:  +clr || 0,
+      moneda: c.moneda || 'Soles',
+      cuota:  c.cuota  || 0,
+      bolsaBN:  c.bolsaBN  || 0,
+      bolsaCLR: c.bolsaCLR || 0,
+      exBN:     c.exBN     || 0,
+      exCLR:    c.exCLR    || 0,
     };
-  });
+  }).filter(r=>r.cli && r.mes !== '?') : [];
+
+  if(DATA.length === 0)
+    throw new Error('No se pudieron procesar filas de Fact_Consumos. Revisa las columnas detectadas arriba.');
 
   MESES = [...new Set(DATA.map(r=>r.mes))].sort(mesSort);
 
-  // Periodo en header
   document.getElementById('periodoLbl').textContent =
     MESES.length ? `${MESES[0]} – ${MESES[MESES.length-1]}` : '—';
   document.getElementById('lastUp').textContent =
@@ -672,7 +768,6 @@ function renderMix(){
 </script>
 </body>
 </html>
-
 
 
 
