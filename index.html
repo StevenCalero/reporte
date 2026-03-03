@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard de Impresión</title>
+<title>Dashboard de Impresión - Links Fijos</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -41,6 +41,7 @@
   .field-wrap{display:flex;gap:.6rem;margin-bottom:.75rem;}
   .field-wrap input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;padding:.65rem 1rem;border-radius:2px;outline:none;transition:border-color .2s;}
   .field-wrap input:focus{border-color:var(--accent);}
+  .field-wrap input:read-only{background:var(--surface);color:var(--muted);cursor:not-allowed;}
 
   .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem;}
   .btn{padding:.6rem 1.2rem;border:none;border-radius:2px;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity .2s;}
@@ -147,51 +148,35 @@
 <div class="wrap">
 
   <!-- ════════════════════════════════════════
-       PANEL DE CONFIGURACIÓN
-       Solo el encargado lo usa (una vez)
+       PANEL DE CONFIGURACIÓN (ahora con links fijos)
   ════════════════════════════════════════ -->
   <div id="setup">
-    <div class="s-title">⚙ Conectar con Google Sheets</div>
-    <div class="s-sub">El encargado hace esto una sola vez · Los demás solo abren el archivo HTML</div>
+    <div class="s-title">⚙ Google Sheets Conectado</div>
+    <div class="s-sub">Links fijos configurados en el código · Los datos se cargan automáticamente</div>
 
     <div class="steps">
       <div class="step">
-        <div class="sn">1</div>
-        <div class="sb">Abre tu Google Sheets. Ve a <b>Archivo → Compartir → Publicar en la web</b>.</div>
+        <div class="sn">✓</div>
+        <div class="sb">Los links de Google Sheets ya están fijos en el código. No necesitas configurar nada.</div>
       </div>
       <div class="step">
-        <div class="sn">2</div>
-        <div class="sb">
-          Selecciona la hoja <b>Fact_Consumos</b>, elige formato <b>Valores separados por comas (.csv)</b>
-          y presiona <b>Publicar</b>. Copia el link que aparece.<br>
-          Repite lo mismo para la hoja <b>Dim_Clientes</b>.
-        </div>
-      </div>
-      <div class="step">
-        <div class="sn">3</div>
-        <div class="sb">Pega los dos links abajo y haz clic en <b>Conectar y guardar</b>.</div>
-      </div>
-      <div class="step">
-        <div class="sn">4</div>
-        <div class="sb">
-          Guarda este archivo HTML en la carpeta compartida. Cada vez que alguien lo abra,
-          el dashboard leerá los datos frescos automáticamente. <b>Para actualizar datos: solo edita el Sheets.</b>
-        </div>
+        <div class="sn">📊</div>
+        <div class="sb">Los datos se actualizan automáticamente cada vez que abres esta página.</div>
       </div>
     </div>
 
-    <div class="field-lbl">📋 Link CSV — Fact_Consumos (consumos mensuales por cliente)</div>
+    <div class="field-lbl">📋 Link CSV — Fact_Consumos (fijo en el código)</div>
     <div class="field-wrap">
-      <input id="uConsumos" type="text" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=...">
+      <input id="uConsumos" type="text" readonly placeholder="Link fijo configurado en el código">
     </div>
 
-    <div class="field-lbl">📋 Link CSV — Dim_Clientes (clientes, tarifas y contratos)</div>
+    <div class="field-lbl">📋 Link CSV — Dim_Clientes (fijo en el código)</div>
     <div class="field-wrap">
-      <input id="uClientes" type="text" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=...">
+      <input id="uClientes" type="text" readonly placeholder="Link fijo configurado en el código">
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="conectar()">▶ Conectar y guardar</button>
+      <button class="btn btn-primary" onclick="conectar()">▶ Conectar (usando links fijos)</button>
       <button class="btn btn-ghost"   onclick="ocultarSetup()">Ocultar panel</button>
       <button class="btn btn-danger"  onclick="desconectar()" style="margin-left:auto">✕ Desconectar</button>
     </div>
@@ -219,13 +204,13 @@
 
   <!-- Botón para reabrir el panel -->
   <div id="setupToggle">
-    <button class="btn btn-ghost" style="font-size:.63rem" onclick="mostrarSetup()">⚙ Configuración de datos</button>
+    <button class="btn btn-ghost" style="font-size:.63rem" onclick="mostrarSetup()">⚙ Mostrar configuración</button>
   </div>
 
   <!-- Empty state -->
   <div id="empty">
-    <h2>Sin datos conectados</h2>
-    <p>Configura el link de Google Sheets arriba para comenzar</p>
+    <h2>Cargando datos...</h2>
+    <p>Conectando a Google Sheets con links fijos</p>
   </div>
 
   <!-- ════════════════════════════════════════
@@ -239,7 +224,7 @@
         <p>Dashboard de Consumo e Ingresos</p>
       </div>
       <div class="hright">
-        <span class="badge live">● En vivo · Google Sheets</span>
+        <span class="badge live">● En vivo · Google Sheets (Links Fijos)</span>
         <span class="badge" id="periodoLbl">—</span>
         <div id="lastUp"></div>
       </div>
@@ -330,6 +315,18 @@
 
 <script>
 // ══════════════════════════════════════════════════════════
+// LINKS FIJOS DE GOOGLE SHEETS 🔴 REEMPLAZA ESTOS CON TUS URLs
+// ══════════════════════════════════════════════════════════
+
+// 🔴🔴🔴 REEMPLAZA ESTOS DOS LINKS CON LOS TUYOS 🔴🔴🔴
+// Paso 1: Obtén el link de tu hoja "Fact_Consumos" publicada como CSV
+// Paso 2: Obtén el link de tu hoja "Dim_Clientes" publicada como CSV
+// Paso 3: Cópialos aquí abajo:
+
+const LINK_FIJO_CONSUMOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=1319248561&single=true&output=csv";
+const LINK_FIJO_CLIENTES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=0&single=true&output=csv";
+
+// ══════════════════════════════════════════════════════════
 // ESTADO
 // ══════════════════════════════════════════════════════════
 let DATA    = [];   // consumos enriquecidos
@@ -361,46 +358,49 @@ function connBar(url){
 }
 
 // ══════════════════════════════════════════════════════════
-// CONEXIÓN
+// CONEXIÓN CON LINKS FIJOS
 // ══════════════════════════════════════════════════════════
 async function conectar(){
-  const u1 = document.getElementById('uConsumos').value.trim();
-  const u2 = document.getElementById('uClientes').value.trim();
-  if (!u1 || !u2) return msg('⚠ Pega ambos links CSV antes de continuar.','err');
-  if (!u1.includes('docs.google.com') || !u2.includes('docs.google.com'))
-    return msg('⚠ Los links deben ser de Google Sheets (docs.google.com).','err');
-  msg('Verificando conexión…','loading');
+  // Usamos los links fijos definidos arriba
+  msg('Conectando con links fijos…','loading');
   loading(true);
   try {
-    await cargar(u1,u2);
-    localStorage.setItem(SK1,u1);
-    localStorage.setItem(SK2,u2);
-    msg('✓ Conectado. Datos cargados correctamente.','ok');
-    connBar(u1);
+    await cargar(LINK_FIJO_CONSUMOS, LINK_FIJO_CLIENTES);
+    // Guardamos en localStorage como respaldo
+    localStorage.setItem(SK1, LINK_FIJO_CONSUMOS);
+    localStorage.setItem(SK2, LINK_FIJO_CLIENTES);
+    
+    // Mostramos los links en los inputs (como referencia)
+    document.getElementById('uConsumos').value = LINK_FIJO_CONSUMOS;
+    document.getElementById('uClientes').value = LINK_FIJO_CLIENTES;
+    
+    msg('✓ Conectado con links fijos. Datos cargados correctamente.','ok');
+    connBar('Links fijos de Google Sheets');
   } catch(e){
-    msg('✕ '+e.message,'err');
+    msg('✕ ' + e.message,'err');
   } finally { loading(false); }
 }
 
 async function recargar(){
-  const u1=localStorage.getItem(SK1), u2=localStorage.getItem(SK2);
-  if (!u1||!u2) return;
   loading(true);
   try {
-    await cargar(u1,u2);
-    msg('✓ Datos actualizados · '+new Date().toLocaleTimeString('es-PE'),'ok');
-  } catch(e){ msg('✕ '+e.message,'err'); }
-  finally { loading(false); }
+    await cargar(LINK_FIJO_CONSUMOS, LINK_FIJO_CLIENTES);
+    msg('✓ Datos actualizados · ' + new Date().toLocaleTimeString('es-PE'),'ok');
+  } catch(e){ 
+    msg('✕ ' + e.message,'err'); 
+  } finally { loading(false); }
 }
 
 function desconectar(){
-  localStorage.removeItem(SK1); localStorage.removeItem(SK2);
+  // No borramos los links fijos, solo limpiamos la vista
   DATA=[]; CLIMAP={}; MESES=[];
-  if(ch1){ch1.destroy();ch1=null;} if(ch2){ch2.destroy();ch2=null;} if(ch3){ch3.destroy();ch3=null;}
+  if(ch1){ch1.destroy();ch1=null;} 
+  if(ch2){ch2.destroy();ch2=null;} 
+  if(ch3){ch3.destroy();ch3=null;}
   document.getElementById('cbar').classList.remove('on');
   document.getElementById('dash').classList.remove('on');
   document.getElementById('empty').classList.add('on');
-  msg('Desconectado.','');
+  msg('Desconectado. Para volver a conectar, haz clic en "Conectar".','');
 }
 
 // ══════════════════════════════════════════════════════════
@@ -495,8 +495,8 @@ function mostrarDebug(hdrConsumos, hdrClientes){
   document.getElementById('msg').after(div);
 }
 
-async function cargar(u1,u2){
-  const [r1,r2] = await Promise.all([fetch(u1),fetch(u2)]);
+async function cargar(u1, u2){
+  const [r1,r2] = await Promise.all([fetch(u1), fetch(u2)]);
   if(!r1.ok) throw new Error(`No se pudo leer Fact_Consumos (HTTP ${r1.status}). ¿Está publicado como CSV?`);
   if(!r2.ok) throw new Error(`No se pudo leer Dim_Clientes (HTTP ${r2.status}). ¿Está publicado como CSV?`);
 
@@ -599,7 +599,7 @@ function setFiltro(cli, btnEl, color){
     b.style.background=b.style.borderColor=b.style.color='';
   });
   if(cli==='ALL'){
-    cont.querySelector('[data-cli="ALL"]').classList.add('active');
+    document.querySelector('[data-cli="ALL"]').classList.add('active');
   } else if(btnEl){
     btnEl.classList.add('active');
     btnEl.style.background  = color;
@@ -743,36 +743,27 @@ function renderMix(){
 }
 
 // ══════════════════════════════════════════════════════════
-// INICIO AUTOMÁTICO
+// INICIO AUTOMÁTICO - CON LINKS FIJOS
 // ══════════════════════════════════════════════════════════
 (async()=>{
-  const u1=localStorage.getItem(SK1), u2=localStorage.getItem(SK2);
-  if(u1&&u2){
-    document.getElementById('uConsumos').value=u1;
-    document.getElementById('uClientes').value=u2;
-    ocultarSetup();
-    loading(true);
-    try {
-      await cargar(u1,u2);
-      connBar(u1);
-    } catch(e){
-      document.getElementById('empty').classList.add('on');
-      document.getElementById('empty').querySelector('p').textContent=
-        'Error al cargar: '+e.message+' — Abre ⚙ Configuración para reconectar.';
-      mostrarSetup();
-    } finally { loading(false); }
-  } else {
+  // Mostramos los links fijos en los inputs (como referencia visual)
+  document.getElementById('uConsumos').value = LINK_FIJO_CONSUMOS;
+  document.getElementById('uClientes').value = LINK_FIJO_CLIENTES;
+  
+  // Cargamos automáticamente al abrir la página
+  loading(true);
+  try {
+    await cargar(LINK_FIJO_CONSUMOS, LINK_FIJO_CLIENTES);
+    ocultarSetup(); // Opcional: comenta esta línea si quieres que el panel siempre se muestre
+    connBar('Links fijos: Google Sheets');
+    msg('✓ Conexión automática con links fijos','ok');
+  } catch(e){
     document.getElementById('empty').classList.add('on');
-  }
+    document.getElementById('empty').querySelector('p').textContent =
+      'Error al cargar: '+e.message + ' — Verifica que los links fijos en el código sean correctos.';
+    mostrarSetup();
+  } finally { loading(false); }
 })();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
