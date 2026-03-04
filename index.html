@@ -270,6 +270,17 @@
 
 <script>
 // ══════════════════════════════════════════════════════════
+// FORMATO DE NÚMEROS  (1,234,567.89)
+// ══════════════════════════════════════════════════════════
+const FMT_NUM  = new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const FMT_DEC2 = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// Entero con separador de miles:  1,234,567
+const fmtInt  = n => FMT_NUM.format(Math.round(n));
+// Decimal dos lugares:            1,234.56
+const fmtDec  = n => FMT_DEC2.format(n);
+
+// ══════════════════════════════════════════════════════════
 // LINKS FIJOS DE GOOGLE SHEETS
 // ══════════════════════════════════════════════════════════
 const LINK_FIJO_CONSUMOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=1319248561&single=true&output=csv";
@@ -591,17 +602,17 @@ function renderKPIs(d){
   const usd   = d.filter(r=>r.moneda==='Dólares').reduce((s,r)=>s+fact(r).total,0);
   const meses = [...new Set(d.map(r=>r.mes))].sort(mesSort);
 
-  document.getElementById('kbn').textContent  = bn.toLocaleString('es-PE');
-  document.getElementById('kclr').textContent = clr.toLocaleString('es-PE');
+  document.getElementById('kbn').textContent  = fmtInt(bn);
+  document.getElementById('kclr').textContent = fmtInt(clr);
 
   if(soles>0&&usd>0){
-    document.getElementById('kfact').textContent    = `S/ ${Math.round(soles).toLocaleString('es-PE')}`;
-    document.getElementById('kfactsub').textContent = `+ USD ${usd.toFixed(2)}`;
+    document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
+    document.getElementById('kfactsub').textContent = `+ USD ${fmtDec(usd)}`;
   } else if(soles>0){
-    document.getElementById('kfact').textContent    = `S/ ${soles.toFixed(2)}`;
+    document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
     document.getElementById('kfactsub').textContent = 'Moneda: Soles';
   } else if(usd>0){
-    document.getElementById('kfact').textContent    = `USD ${usd.toFixed(2)}`;
+    document.getElementById('kfact').textContent    = `USD ${fmtDec(usd)}`;
     document.getElementById('kfactsub').textContent = 'Moneda: Dólares';
   } else {
     document.getElementById('kfact').textContent    = '—';
@@ -614,10 +625,21 @@ function renderKPIs(d){
 
 const bopts = () => ({
   responsive:true, maintainAspectRatio:false, animation:{duration:320},
-  plugins:{legend:{display:false}},
+  plugins:{
+    legend:{display:false},
+    tooltip:{
+      callbacks:{
+        label: ctx => {
+          const v = ctx.parsed.y ?? ctx.parsed;
+          return ` ${ctx.dataset.label}: ${fmtInt(v)}`;
+        }
+      }
+    }
+  },
   scales:{
     x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
-    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}}}
+    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},
+       callback: v => fmtInt(v)}}
   }
 });
 
@@ -695,8 +717,8 @@ function renderMix(d){
         <div class="mclr" style="width:${pCL}%"></div>
       </div>
       <div class="mnums">
-        <span>${bn.toLocaleString('es-PE')} págs BN</span>
-        <span>${cl.toLocaleString('es-PE')} págs Color</span>
+        <span>${fmtInt(bn)} págs BN</span>
+        <span>${fmtInt(cl)} págs Color</span>
       </div>`;
     cont.appendChild(div);
   });
