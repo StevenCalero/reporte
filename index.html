@@ -280,6 +280,16 @@ const fmtInt  = n => FMT_NUM.format(Math.round(n));
 // Decimal dos lugares:            1,234.56
 const fmtDec  = n => FMT_DEC2.format(n);
 
+// Formato de moneda según tipo
+function fmtCurrency(value, currency) {
+  if (currency === 'Soles') {
+    return `S/ ${fmtDec(value)}`;
+  } else if (currency === 'Dólares') {
+    return `USD ${fmtDec(value)}`;
+  }
+  return fmtDec(value);
+}
+
 // ══════════════════════════════════════════════════════════
 // LINKS FIJOS DE GOOGLE SHEETS
 // ══════════════════════════════════════════════════════════
@@ -565,14 +575,15 @@ function getFilt(){
 }
 
 // ══════════════════════════════════════════════════════════
-// FACTURACIÓN
+// FACTURACIÓN - CORREGIDA
 // ══════════════════════════════════════════════════════════
 function fact(r){
   const cuota = r.cuota;
-  const exc   = r.cuota === 0
-    ? r.bn*r.exBN + r.color*r.exCLR
-    : (r.bn>r.bolsaBN?(r.bn-r.bolsaBN)*r.exBN:0)+(r.color>r.bolsaCLR?(r.color-r.bolsaCLR)*r.exCLR:0);
-  return {cuota, exc, total:cuota+exc};
+  // Calcular excedentes correctamente: siempre se cobra la cuota fija + excedentes
+  const excBN = Math.max(0, r.bn - r.bolsaBN) * r.exBN;
+  const excColor = Math.max(0, r.color - r.bolsaCLR) * r.exCLR;
+  const exc = excBN + excColor;
+  return {cuota, exc, total: cuota + exc};
 }
 
 // ══════════════════════════════════════════════════════════
@@ -605,7 +616,7 @@ function renderKPIs(d){
   document.getElementById('kbn').textContent  = fmtInt(bn);
   document.getElementById('kclr').textContent = fmtInt(clr);
 
-  if(soles>0&&usd>0){
+  if(soles>0 && usd>0){
     document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
     document.getElementById('kfactsub').textContent = `+ USD ${fmtDec(usd)}`;
   } else if(soles>0){
@@ -623,7 +634,8 @@ function renderKPIs(d){
   document.getElementById('kmessub').textContent = meses.join(' · ');
 }
 
-const bopts = () => ({
+// Opciones para gráficos de consumo (páginas - números enteros)
+const boptsConsumo = () => ({
   responsive:true, maintainAspectRatio:false, animation:{duration:320},
   plugins:{
     legend:{display:false},
@@ -631,7 +643,7 @@ const bopts = () => ({
       callbacks:{
         label: ctx => {
           const v = ctx.parsed.y ?? ctx.parsed;
-          return ` ${ctx.dataset.label}: ${fmtInt(v)}`;
+          return ` ${ctx.dataset.label}: ${fmtInt(v)} páginas`;
         }
       }
     }
@@ -643,14 +655,35 @@ const bopts = () => ({
   }
 });
 
+// Opciones para gráficos de facturación (montos - 2 decimales)
+const boptsFacturacion = () => ({
+  responsive:true, maintainAspectRatio:false, animation:{duration:320},
+  plugins:{
+    legend:{display:false},
+    tooltip:{
+      callbacks:{
+        label: ctx => {
+          const v = ctx.parsed.y ?? ctx.parsed;
+          return ` ${ctx.dataset.label}: $${fmtDec(v)}`;
+        }
+      }
+    }
+  },
+  scales:{
+    x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},
+       callback: v => `$${fmtDec(v)}`}
+  }
+});
+
 function renderConsumo(d){
   const bn  = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.bn,0));
   const clr = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.color,0));
   if(!ch1){
     ch1 = new Chart(document.getElementById('cConsumo'),{type:'bar',data:{labels:MESES,datasets:[
       {label:'BN',  data:bn,  backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
-      {label:'Clr', data:clr, backgroundColor:'rgba(240,98,146,.85)',borderRadius:2,stack:'s'},
-    ]},options:bopts()});
+      {label:'Color', data:clr, backgroundColor:'rgba(240,98,146,.85)',borderRadius:2,stack:'s'},
+    ]},options:boptsConsumo()});
   } else {
     ch1.data.labels=MESES;
     ch1.data.datasets[0].data=bn; ch1.data.datasets[1].data=clr; ch1.update();
@@ -662,9 +695,9 @@ function renderFact(d){
   const exc   = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+fact(r).exc,0));
   if(!ch2){
     ch2 = new Chart(document.getElementById('cFact'),{type:'bar',data:{labels:MESES,datasets:[
-      {label:'Cuota',data:cuota,backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
-      {label:'Exc',  data:exc,  backgroundColor:'rgba(79,195,247,.85)', borderRadius:2,stack:'s'},
-    ]},options:bopts()});
+      {label:'Cuota Fija', data:cuota, backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
+      {label:'Excedentes', data:exc,   backgroundColor:'rgba(79,195,247,.85)',borderRadius:2,stack:'s'},
+    ]},options:boptsFacturacion()});
   } else {
     ch2.data.labels=MESES;
     ch2.data.datasets[0].data=cuota; ch2.data.datasets[1].data=exc; ch2.update();
@@ -678,12 +711,35 @@ function renderCli(d){
   const colors = keys.map(k=>{
     const act  = filtro==='ALL'||filtro===k;
     const base = CLIMAP[k]?.moneda==='Soles'?'105,240,174':'79,195,247';
-    return `rgba(${base},${act?.85:.2})`;
+    return `rgba(${base},${act ? 0.85 : 0.2})`;
   });
+  
+  const optionsCli = {
+    responsive:true, maintainAspectRatio:false, animation:{duration:320},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          label: ctx => {
+            const v = ctx.parsed.y ?? ctx.parsed;
+            const clienteKey = keys[ctx.dataIndex];
+            const moneda = CLIMAP[clienteKey]?.moneda || 'Soles';
+            return ` Total: ${fmtCurrency(v, moneda)}`;
+          }
+        }
+      }
+    },
+    scales:{
+      x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+      y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},
+         callback: v => `$${fmtDec(v)}`}
+    }
+  };
+  
   if(!ch3){
     ch3 = new Chart(document.getElementById('cCli'),{type:'bar',data:{labels:names,datasets:[
       {label:'Total',data:totals,backgroundColor:colors,borderRadius:3}
-    ]},options:bopts()});
+    ]},options:optionsCli});
   } else {
     ch3.data.labels=names;
     ch3.data.datasets[0].data=totals;
