@@ -58,7 +58,7 @@
   .dbar .flbl{color:var(--accent2);border-color:var(--accent2);}
   .date-group{display:flex;align-items:center;gap:.5rem;}
   .date-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);white-space:nowrap;}
-  .date-input{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.68rem;padding:.45rem .8rem;border-radius:2px;outline:none;transition:border-color .2s;cursor:pointer;}
+  .date-input{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.68rem;padding:.45rem .8rem;border-radius:2px;outline:none;cursor:pointer;}
   .date-input:focus{border-color:var(--accent2);}
   .date-input::-webkit-calendar-picker-indicator{filter:invert(0.6);cursor:pointer;}
   .date-sep{color:var(--border);font-size:.8rem;}
@@ -127,7 +127,7 @@
 <!-- LOADING -->
 <div id="overlay">
   <div class="spin"></div>
-  <div class="spin-lbl">Cargando datos desde Google Sheets…</div>
+  <div class="spin-lbl">Cargando datos...</div>
 </div>
 
 <div class="wrap">
@@ -138,9 +138,7 @@
     <p id="errorMsg">No se pudieron obtener los datos.</p>
   </div>
 
-  <!-- ════════════════════════════════════════
-       DASHBOARD PRINCIPAL
-  ════════════════════════════════════════ -->
+  <!-- DASHBOARD PRINCIPAL -->
   <div id="dash">
 
     <header>
@@ -149,16 +147,15 @@
         <p>Dashboard de Consumo e Ingresos</p>
       </div>
       <div class="hright">
-        <span class="badge live">● En vivo · Google Sheets</span>
+        <span class="badge live">● Demo · Datos de ejemplo</span>
         <span class="badge" id="periodoLbl">—</span>
         <div id="lastUp"></div>
       </div>
     </header>
 
-    <!-- ─── FILTROS ─── -->
+    <!-- FILTROS -->
     <div class="filters-wrap">
 
-      <!-- Filtro por cliente -->
       <div class="fbar">
         <span class="flbl">▶ Cliente:</span>
         <div id="fbuts" style="display:flex;gap:.55rem;flex-wrap:wrap;">
@@ -166,17 +163,16 @@
         </div>
       </div>
 
-      <!-- Filtro por rango de fechas -->
       <div class="dbar">
         <span class="flbl">◈ Período:</span>
         <div class="date-group">
           <span class="date-lbl">Desde</span>
-          <input type="date" id="fechaInicio" class="date-input" onchange="validarFechas()">
+          <input type="date" id="fechaInicio" class="date-input">
         </div>
         <span class="date-sep">→</span>
         <div class="date-group">
           <span class="date-lbl">Hasta</span>
-          <input type="date" id="fechaFin" class="date-input" onchange="validarFechas()">
+          <input type="date" id="fechaFin" class="date-input">
         </div>
         <div class="date-actions">
           <button class="btn-date apply" onclick="aplicarFiltroFecha()">Aplicar</button>
@@ -184,7 +180,6 @@
         </div>
       </div>
 
-      <!-- Badge de filtro activo -->
       <div class="filter-active-badge" id="filterBadge">
         <span>◈ Período filtrado:</span>
         <span id="filterBadgeText">—</span>
@@ -238,7 +233,7 @@
         <div class="cwrap"><canvas id="cFact"></canvas></div>
         <div class="legend">
           <div class="li"><div class="ld" style="background:var(--accent)"></div>Cuota Fija</div>
-          <div class="li"><div class="ld" style="background:var(--accent2)"></div>Excedentes / Consumo</div>
+          <div class="li"><div class="ld" style="background:var(--accent2)"></div>Excedentes</div>
         </div>
       </div>
     </div>
@@ -265,22 +260,19 @@
       </div>
     </div>
 
-  </div><!-- /dash -->
-</div><!-- /wrap -->
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════════════
-// FORMATO DE NÚMEROS  (1,234,567.89)
+// FORMATO DE NÚMEROS
 // ══════════════════════════════════════════════════════════
 const FMT_NUM  = new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 const FMT_DEC2 = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-// Entero con separador de miles:  1,234,567
-const fmtInt  = n => FMT_NUM.format(Math.round(n));
-// Decimal dos lugares:            1,234.56
-const fmtDec  = n => FMT_DEC2.format(n);
+const fmtInt = n => FMT_NUM.format(Math.round(n));
+const fmtDec = n => FMT_DEC2.format(n);
 
-// Formato de moneda según tipo
 function fmtCurrency(value, currency) {
   if (currency === 'Soles') {
     return `S/ ${fmtDec(value)}`;
@@ -291,283 +283,164 @@ function fmtCurrency(value, currency) {
 }
 
 // ══════════════════════════════════════════════════════════
-// LINKS FIJOS DE GOOGLE SHEETS
+// DATOS DE EJEMPLO (usando tus parámetros)
 // ══════════════════════════════════════════════════════════
-const LINK_FIJO_CONSUMOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=1319248561&single=true&output=csv";
-const LINK_FIJO_CLIENTES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=0&single=true&output=csv";
+
+// Parámetros del cliente
+const CLIENTE_PARAMS = {
+  'CLI001': {
+    nombre: 'Empresa Alpha',
+    moneda: 'Soles',
+    cuota: 366.10,
+    bolsaBN: 20000,
+    bolsaCLR: 1800,
+    exBN: 0.0050,
+    exCLR: 0.0420
+  }
+};
+
+// Datos de consumo (tus datos)
+const DATOS_CONSUMO = [
+  { cli: 'CLI001', fecha: '2026-01-31', bn: 23592, color: 4928 },
+  { cli: 'CLI001', fecha: '2026-02-28', bn: 26767, color: 4236 },
+  { cli: 'CLI001', fecha: '2026-03-31', bn: 40369, color: 3729 }
+];
 
 // ══════════════════════════════════════════════════════════
-// ESTADO
+// FUNCIÓN DE FACTURACIÓN CORRECTA
 // ══════════════════════════════════════════════════════════
-let DATA     = [];   // consumos enriquecidos (todos)
-let CLIMAP   = {};   // { CLI001: { nombre, moneda, cuota, ... } }
-let MESES    = [];   // etiquetas X ordenadas (del set filtrado)
-let filtro   = 'ALL';
-let fechaIni = null; // Date object
-let fechaFin = null; // Date object
+function calcularFactura(row, params) {
+  const cuota = params.cuota;
+  const excBN = Math.max(0, row.bn - params.bolsaBN) * params.exBN;
+  const excColor = Math.max(0, row.color - params.bolsaCLR) * params.exCLR;
+  const exc = excBN + excColor;
+  return { cuota, exc, total: cuota + exc };
+}
+
+// ══════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ══════════════════════════════════════════════════════════
+let DATA = [];
+let MESES = [];
+let filtro = 'ALL';
+let fechaIni = null;
+let fechaFin = null;
 let ch1, ch2, ch3;
 
 // ══════════════════════════════════════════════════════════
-// LOADING / ERROR
+// INICIALIZAR DATOS
 // ══════════════════════════════════════════════════════════
-const loading = on => document.getElementById('overlay').classList.toggle('on', on);
-
-function showError(msg){
-  document.getElementById('errorState').classList.add('on');
-  document.getElementById('errorMsg').textContent = msg;
-}
-
-// ══════════════════════════════════════════════════════════
-// FILTRO FECHAS
-// ══════════════════════════════════════════════════════════
-function validarFechas(){
-  const ini = document.getElementById('fechaInicio').value;
-  const fin = document.getElementById('fechaFin').value;
-  if(ini && fin && ini > fin){
-    document.getElementById('fechaFin').style.borderColor = 'var(--red)';
-  } else {
-    document.getElementById('fechaFin').style.borderColor = '';
-  }
-}
-
-function aplicarFiltroFecha(){
-  const ini = document.getElementById('fechaInicio').value;
-  const fin = document.getElementById('fechaFin').value;
-  if(!ini && !fin){ limpiarFiltroFecha(); return; }
-  if(ini && fin && ini > fin){
-    document.getElementById('fechaFin').style.borderColor = 'var(--red)';
-    return;
-  }
-  fechaIni = ini ? new Date(ini + 'T00:00:00') : null;
-  fechaFin = fin ? new Date(fin + 'T23:59:59') : null;
-
-  // Mostrar badge
-  const badge = document.getElementById('filterBadge');
-  const txt   = document.getElementById('filterBadgeText');
-  const fmtDate = d => d ? d.toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'}) : '…';
-  txt.textContent = `${fmtDate(fechaIni)} → ${fmtDate(fechaFin)}`;
-  badge.classList.add('on');
-
-  renderAll();
-}
-
-function limpiarFiltroFecha(){
-  fechaIni = null;
-  fechaFin = null;
-  document.getElementById('fechaInicio').value = '';
-  document.getElementById('fechaFin').value    = '';
-  document.getElementById('fechaFin').style.borderColor = '';
-  document.getElementById('filterBadge').classList.remove('on');
-  renderAll();
-}
-
-// Convierte el string de fecha original a un objeto Date para comparar
-function parseDate(fechaStr){
-  if(!fechaStr || typeof fechaStr !== 'string') return null;
-  const clean = fechaStr.trim();
-  if(/^\d{4}-\d{2}-\d{2}/.test(clean)) return new Date(clean.slice(0,10)+'T00:00:00');
-  if(/^\d{2}\/\d{2}\/\d{4}/.test(clean)){
-    const [dd,mm,yyyy] = clean.split('/');
-    return new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
-  }
-  const d = new Date(clean);
-  return isNaN(d) ? null : d;
-}
-
-// ══════════════════════════════════════════════════════════
-// PARSEO CSV ROBUSTO
-// ══════════════════════════════════════════════════════════
-function norm(s){
-  return (s||'').toLowerCase()
-    .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
-    .replace(/[^a-z0-9]/g,'');
-}
-
-function col(obj, ...aliases){
-  const normObj = {};
-  Object.keys(obj).forEach(k => normObj[norm(k)] = obj[k]);
-  for(const a of aliases){
-    const v = normObj[norm(a)];
-    if(v !== undefined) return v;
-  }
-  return '';
-}
-
-function parseCSV(txt){
-  const lines = txt.trim().split(/\r?\n/);
-  const splitLine = l => {
-    const res=[]; let cur='', inQ=false;
-    for(const ch of l){
-      if(ch==='"'){ inQ=!inQ; }
-      else if(ch===','&&!inQ){ res.push(cur.trim()); cur=''; }
-      else cur+=ch;
-    }
-    res.push(cur.trim());
-    return res;
-  };
-  const rows = lines.map(splitLine);
-  const hdr  = rows[0];
-  return {
-    headers: hdr,
-    rows: rows.slice(1).filter(r=>r.some(c=>c!=='')).map(r=>{
-      const o={}; hdr.forEach((h,i)=>o[h]=(r[i]||'').trim()); return o;
-    })
-  };
-}
-
-function mesLabel(f){
-  if(!f || typeof f !== 'string') return '?';
-  const clean = f.trim();
-  let d;
-  if(/^\d{4}-\d{2}-\d{2}/.test(clean)){
-    d = new Date(clean.slice(0,10));
-  } else if(/^\d{2}\/\d{2}\/\d{4}/.test(clean)){
-    const [dd,mm,yyyy] = clean.split('/');
-    d = new Date(`${yyyy}-${mm}-${dd}`);
-  } else {
-    d = new Date(clean);
-  }
-  if(isNaN(d.getTime())) return clean;
-  return d.toLocaleString('es-PE',{month:'short',year:'2-digit'});
-}
-
-function mesSort(a,b){
-  const M=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const p=s=>{
-    const parts = s.toLowerCase().split(' ');
-    const mi = M.findIndex(m => parts[0].startsWith(m));
-    const y  = parseInt(parts[1]||'0');
-    return y*12+(mi>=0?mi:0);
-  };
-  return p(a)-p(b);
-}
-
-// ══════════════════════════════════════════════════════════
-// CARGAR DATOS
-// ══════════════════════════════════════════════════════════
-async function cargar(u1, u2){
-  const [r1,r2] = await Promise.all([fetch(u1), fetch(u2)]);
-  if(!r1.ok) throw new Error(`No se pudo leer Fact_Consumos (HTTP ${r1.status})`);
-  if(!r2.ok) throw new Error(`No se pudo leer Dim_Clientes (HTTP ${r2.status})`);
-
-  const txt1 = await r1.text();
-  const txt2 = await r2.text();
-  const parsed1 = parseCSV(txt1);
-  const parsed2 = parseCSV(txt2);
-
-  if(parsed1.rows.length === 0) throw new Error('Fact_Consumos está vacío.');
-  if(parsed2.rows.length === 0) throw new Error('Dim_Clientes está vacío.');
-
-  // Mapa clientes
-  CLIMAP={};
-  parsed2.rows.forEach(r=>{
-    const id = col(r,'ID_Cliente','IDCliente','id_cliente','cliente_id','id','codigo');
-    if(!id) return;
-    CLIMAP[id.trim()]={
-      nombre:  col(r,'Nombre_Cliente','NombreCliente','nombre_cliente','nombre','razon_social','cliente') || id,
-      moneda:  col(r,'Moneda','moneda','currency') || 'Soles',
-      cuota:   +col(r,'Cuota_Fija','CuotaFija','cuota_fija','cuota','fijo') || 0,
-      bolsaBN: +col(r,'Bolsa_BN','BolsaBN','bolsa_bn','bolsa bn','paginas_bn_incluidas') || 0,
-      bolsaCLR:+col(r,'Bolsa_Color','BolsaColor','bolsa_color','bolsa color') || 0,
-      exBN:    +col(r,'Costo_Excedente_BN','CostoExcedenteBN','costo_excedente_bn','excedente_bn','precio_bn') || 0,
-      exCLR:   +col(r,'Costo_Excedente_Color','CostoExcedenteColor','costo_excedente_color','excedente_color','precio_color') || 0,
+function inicializarDatos() {
+  DATA = DATOS_CONSUMO.map(row => {
+    const params = CLIENTE_PARAMS[row.cli];
+    const fecha = new Date(row.fecha);
+    const mesLabel = fecha.toLocaleString('es-PE', { month: 'short', year: '2-digit' });
+    const fact = calcularFactura(row, params);
+    
+    return {
+      cli: row.cli,
+      nombre: params.nombre,
+      mes: mesLabel,
+      fechaObj: fecha,
+      bn: row.bn,
+      color: row.color,
+      moneda: params.moneda,
+      cuota: params.cuota,
+      bolsaBN: params.bolsaBN,
+      bolsaCLR: params.bolsaCLR,
+      exBN: params.exBN,
+      exCLR: params.exCLR,
+      factCuota: fact.cuota,
+      factExc: fact.exc,
+      factTotal: fact.total
     };
   });
 
-  if(Object.keys(CLIMAP).length === 0)
-    throw new Error('No se encontró ID_Cliente en Dim_Clientes.');
-
-  // Enriquecer consumos — guardamos también la fecha original para filtrar
-  DATA = parsed1.rows.map(r=>{
-    const id    = col(r,'ID_Cliente','IDCliente','id_cliente','cliente_id','id','codigo');
-    const fecha = col(r,'Fecha_Lectura','FechaLectura','fecha_lectura','fecha','date','periodo');
-    const bn    = col(r,'Paginas_BN','PaginasBN','paginas_bn','bn','blanco_negro','byn');
-    const clr   = col(r,'Paginas_Color','PaginasColor','paginas_color','color','colour');
-    const cid   = (id||'').trim();
-    const c     = CLIMAP[cid] || {};
-    return {
-      cli:      cid,
-      nombre:   c.nombre  || cid,
-      mes:      mesLabel(fecha),
-      fechaRaw: fecha,               // ← guardamos la fecha original
-      fechaObj: parseDate(fecha),    // ← objeto Date para comparar
-      bn:       +bn  || 0,
-      color:    +clr || 0,
-      moneda:   c.moneda  || 'Soles',
-      cuota:    c.cuota   || 0,
-      bolsaBN:  c.bolsaBN  || 0,
-      bolsaCLR: c.bolsaCLR || 0,
-      exBN:     c.exBN     || 0,
-      exCLR:    c.exCLR    || 0,
-    };
-  }).filter(r=>r.cli && r.mes !== '?');
-
-  if(DATA.length === 0)
-    throw new Error('No se pudieron procesar filas de Fact_Consumos.');
-
-  // Precargar rango de fechas en los inputs
-  const fechas = DATA.map(r=>r.fechaObj).filter(Boolean).sort((a,b)=>a-b);
-  if(fechas.length){
-    const toISO = d => d.toISOString().slice(0,10);
+  // Ordenar por fecha
+  DATA.sort((a, b) => a.fechaObj - b.fechaObj);
+  
+  // Configurar fechas en los inputs
+  const fechas = DATA.map(r => r.fechaObj);
+  if (fechas.length) {
+    const toISO = d => d.toISOString().slice(0, 10);
     document.getElementById('fechaInicio').value = toISO(fechas[0]);
-    document.getElementById('fechaFin').value    = toISO(fechas[fechas.length-1]);
+    document.getElementById('fechaFin').value = toISO(fechas[fechas.length - 1]);
   }
-
-  document.getElementById('lastUp').textContent = 'Actualizado: '+new Date().toLocaleString('es-PE');
-
+  
+  document.getElementById('lastUp').textContent = 'Actualizado: ' + new Date().toLocaleString('es-PE');
+  
   construirFiltros();
   renderAll();
-
   document.getElementById('dash').classList.add('on');
+  document.getElementById('overlay').classList.remove('on');
 }
 
 // ══════════════════════════════════════════════════════════
 // FILTROS
 // ══════════════════════════════════════════════════════════
-const CLI_PALETA = ['var(--green)','var(--accent2)','var(--accent3)','#ce93d8','#ffb74d','#80cbc4'];
-
-function construirFiltros(){
-  const keys = [...new Set(DATA.map(r=>r.cli))];
+function construirFiltros() {
+  const keys = [...new Set(DATA.map(r => r.cli))];
   const cont = document.getElementById('fbuts');
-  cont.innerHTML = `<button class="fbtn active" data-cli="ALL" onclick="setFiltro('ALL')">Todos</button>`;
-  keys.forEach((k,i)=>{
-    const nombre = CLIMAP[k]?.nombre||k;
-    const corto  = nombre.split(' ').slice(0,2).join(' ');
-    const color  = CLI_PALETA[i%CLI_PALETA.length];
+  cont.innerHTML = '<button class="fbtn active" data-cli="ALL" onclick="setFiltro(\'ALL\')">Todos</button>';
+  keys.forEach(k => {
+    const nombre = CLIENTE_PARAMS[k]?.nombre || k;
+    const corto = nombre.split(' ').slice(0, 2).join(' ');
     const b = document.createElement('button');
-    b.className='fbtn'; b.dataset.cli=k; b.textContent=corto;
-    b.onclick=()=> setFiltro(k, b, color);
+    b.className = 'fbtn';
+    b.dataset.cli = k;
+    b.textContent = corto;
+    b.onclick = () => setFiltro(k);
     cont.appendChild(b);
   });
 }
 
-function setFiltro(cli, btnEl, color){
+function setFiltro(cli) {
   filtro = cli;
-  document.querySelectorAll('.fbtn').forEach(b=>{
+  document.querySelectorAll('.fbtn').forEach(b => {
     b.classList.remove('active');
-    b.style.background=b.style.borderColor=b.style.color='';
+    b.style.background = b.style.borderColor = b.style.color = '';
   });
-  if(cli==='ALL'){
+  if (cli === 'ALL') {
     document.querySelector('[data-cli="ALL"]').classList.add('active');
-  } else if(btnEl){
-    btnEl.classList.add('active');
-    btnEl.style.background  = color;
-    btnEl.style.borderColor = color;
-    btnEl.style.color       = '#0a0c10';
+  } else {
+    const btn = document.querySelector(`.fbtn[data-cli="${cli}"]`);
+    if (btn) btn.classList.add('active');
   }
   renderAll();
 }
 
-// ── Obtiene los datos aplicando AMBOS filtros (cliente + fecha) ──
-function getFilt(){
-  let d = filtro === 'ALL' ? DATA : DATA.filter(r=>r.cli===filtro);
+function aplicarFiltroFecha() {
+  const ini = document.getElementById('fechaInicio').value;
+  const fin = document.getElementById('fechaFin').value;
+  if (!ini && !fin) { limpiarFiltroFecha(); return; }
+  if (ini && fin && ini > fin) return;
+  
+  fechaIni = ini ? new Date(ini + 'T00:00:00') : null;
+  fechaFin = fin ? new Date(fin + 'T23:59:59') : null;
+  
+  const badge = document.getElementById('filterBadge');
+  const txt = document.getElementById('filterBadgeText');
+  const fmtDate = d => d ? d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' }) : '…';
+  txt.textContent = `${fmtDate(fechaIni)} → ${fmtDate(fechaFin)}`;
+  badge.classList.add('on');
+  renderAll();
+}
 
-  // Aplicar filtro de fecha si está activo
-  if(fechaIni || fechaFin){
-    d = d.filter(r=>{
-      if(!r.fechaObj) return true; // si no hay fecha, incluir
-      if(fechaIni && r.fechaObj < fechaIni) return false;
-      if(fechaFin && r.fechaObj > fechaFin) return false;
+function limpiarFiltroFecha() {
+  fechaIni = null;
+  fechaFin = null;
+  document.getElementById('fechaInicio').value = '';
+  document.getElementById('fechaFin').value = '';
+  document.getElementById('filterBadge').classList.remove('on');
+  renderAll();
+}
+
+function getFilt() {
+  let d = filtro === 'ALL' ? [...DATA] : DATA.filter(r => r.cli === filtro);
+  if (fechaIni || fechaFin) {
+    d = d.filter(r => {
+      if (fechaIni && r.fechaObj < fechaIni) return false;
+      if (fechaFin && r.fechaObj > fechaFin) return false;
       return true;
     });
   }
@@ -575,30 +448,23 @@ function getFilt(){
 }
 
 // ══════════════════════════════════════════════════════════
-// FACTURACIÓN - CORREGIDA
-// ══════════════════════════════════════════════════════════
-function fact(r){
-  const cuota = r.cuota;
-  // Calcular excedentes correctamente: siempre se cobra la cuota fija + excedentes
-  const excBN = Math.max(0, r.bn - r.bolsaBN) * r.exBN;
-  const excColor = Math.max(0, r.color - r.bolsaCLR) * r.exCLR;
-  const exc = excBN + excColor;
-  return {cuota, exc, total: cuota + exc};
-}
-
-// ══════════════════════════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════════════════════════
-function renderAll(){
+function renderAll() {
   const d = getFilt();
-
-  // Actualizar meses según los datos filtrados
-  MESES = [...new Set(d.map(r=>r.mes))].sort(mesSort);
-
-  // Actualizar badge de período
-  document.getElementById('periodoLbl').textContent =
-    MESES.length ? `${MESES[0]} – ${MESES[MESES.length-1]}` : '—';
-
+  MESES = [...new Set(d.map(r => r.mes))].sort((a, b) => {
+    const meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const getVal = s => {
+      const parts = s.toLowerCase().split(' ');
+      const mi = meses.findIndex(m => parts[0].startsWith(m));
+      const y = parseInt(parts[1] || '0');
+      return y * 12 + (mi >= 0 ? mi : 0);
+    };
+    return getVal(a) - getVal(b);
+  });
+  
+  document.getElementById('periodoLbl').textContent = MESES.length ? `${MESES[0]} – ${MESES[MESES.length - 1]}` : '—';
+  
   renderKPIs(d);
   renderConsumo(d);
   renderFact(d);
@@ -606,170 +472,130 @@ function renderAll(){
   renderMix(d);
 }
 
-function renderKPIs(d){
-  const bn    = d.reduce((s,r)=>s+r.bn,0);
-  const clr   = d.reduce((s,r)=>s+r.color,0);
-  const soles = d.filter(r=>r.moneda==='Soles').reduce((s,r)=>s+fact(r).total,0);
-  const usd   = d.filter(r=>r.moneda==='Dólares').reduce((s,r)=>s+fact(r).total,0);
-  const meses = [...new Set(d.map(r=>r.mes))].sort(mesSort);
-
-  document.getElementById('kbn').textContent  = fmtInt(bn);
+function renderKPIs(d) {
+  const bn = d.reduce((s, r) => s + r.bn, 0);
+  const clr = d.reduce((s, r) => s + r.color, 0);
+  const soles = d.filter(r => r.moneda === 'Soles').reduce((s, r) => s + r.factTotal, 0);
+  const usd = d.filter(r => r.moneda === 'Dólares').reduce((s, r) => s + r.factTotal, 0);
+  const meses = [...new Set(d.map(r => r.mes))];
+  
+  document.getElementById('kbn').textContent = fmtInt(bn);
   document.getElementById('kclr').textContent = fmtInt(clr);
-
-  if(soles>0 && usd>0){
-    document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
+  
+  if (soles > 0 && usd > 0) {
+    document.getElementById('kfact').textContent = `S/ ${fmtDec(soles)}`;
     document.getElementById('kfactsub').textContent = `+ USD ${fmtDec(usd)}`;
-  } else if(soles>0){
-    document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
+  } else if (soles > 0) {
+    document.getElementById('kfact').textContent = `S/ ${fmtDec(soles)}`;
     document.getElementById('kfactsub').textContent = 'Moneda: Soles';
-  } else if(usd>0){
-    document.getElementById('kfact').textContent    = `USD ${fmtDec(usd)}`;
+  } else if (usd > 0) {
+    document.getElementById('kfact').textContent = `USD ${fmtDec(usd)}`;
     document.getElementById('kfactsub').textContent = 'Moneda: Dólares';
   } else {
-    document.getElementById('kfact').textContent    = '—';
+    document.getElementById('kfact').textContent = '—';
     document.getElementById('kfactsub').textContent = '';
   }
-
-  document.getElementById('kmes').textContent    = meses.length;
+  
+  document.getElementById('kmes').textContent = meses.length;
   document.getElementById('kmessub').textContent = meses.join(' · ');
 }
 
-// Opciones para gráficos de consumo (páginas - números enteros)
-const boptsConsumo = () => ({
-  responsive:true, maintainAspectRatio:false, animation:{duration:320},
-  plugins:{
-    legend:{display:false},
-    tooltip:{
-      callbacks:{
-        label: ctx => {
-          const v = ctx.parsed.y ?? ctx.parsed;
-          return ` ${ctx.dataset.label}: ${fmtInt(v)} páginas`;
-        }
+function renderConsumo(d) {
+  const bn = MESES.map(m => d.filter(r => r.mes === m).reduce((s, r) => s + r.bn, 0));
+  const clr = MESES.map(m => d.filter(r => r.mes === m).reduce((s, r) => s + r.color, 0));
+  
+  if (!ch1) {
+    ch1 = new Chart(document.getElementById('cConsumo'), {
+      type: 'bar',
+      data: { labels: MESES, datasets: [
+        { label: 'BN', data: bn, backgroundColor: 'rgba(232,197,71,.85)', borderRadius: 2, stack: 's' },
+        { label: 'Color', data: clr, backgroundColor: 'rgba(240,98,146,.85)', borderRadius: 2, stack: 's' }
+      ]},
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtInt(ctx.parsed.y)} páginas` } } },
+        scales: { x: { grid: { color: '#1f2530' }, ticks: { color: '#7a8399', font: { size: 11 } } }, y: { grid: { color: '#1f2530' }, ticks: { color: '#7a8399', callback: v => fmtInt(v) } } }
       }
-    }
-  },
-  scales:{
-    x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
-    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},
-       callback: v => fmtInt(v)}}
-  }
-});
-
-// Opciones para gráficos de facturación (montos - 2 decimales)
-const boptsFacturacion = () => ({
-  responsive:true, maintainAspectRatio:false, animation:{duration:320},
-  plugins:{
-    legend:{display:false},
-    tooltip:{
-      callbacks:{
-        label: ctx => {
-          const v = ctx.parsed.y ?? ctx.parsed;
-          return ` ${ctx.dataset.label}: $${fmtDec(v)}`;
-        }
-      }
-    }
-  },
-  scales:{
-    x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
-    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},
-       callback: v => `$${fmtDec(v)}`}
-  }
-});
-
-function renderConsumo(d){
-  const bn  = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.bn,0));
-  const clr = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.color,0));
-  if(!ch1){
-    ch1 = new Chart(document.getElementById('cConsumo'),{type:'bar',data:{labels:MESES,datasets:[
-      {label:'BN',  data:bn,  backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
-      {label:'Color', data:clr, backgroundColor:'rgba(240,98,146,.85)',borderRadius:2,stack:'s'},
-    ]},options:boptsConsumo()});
+    });
   } else {
-    ch1.data.labels=MESES;
-    ch1.data.datasets[0].data=bn; ch1.data.datasets[1].data=clr; ch1.update();
+    ch1.data.labels = MESES;
+    ch1.data.datasets[0].data = bn;
+    ch1.data.datasets[1].data = clr;
+    ch1.update();
   }
 }
 
-function renderFact(d){
-  const cuota = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+fact(r).cuota,0));
-  const exc   = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+fact(r).exc,0));
-  if(!ch2){
-    ch2 = new Chart(document.getElementById('cFact'),{type:'bar',data:{labels:MESES,datasets:[
-      {label:'Cuota Fija', data:cuota, backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
-      {label:'Excedentes', data:exc,   backgroundColor:'rgba(79,195,247,.85)',borderRadius:2,stack:'s'},
-    ]},options:boptsFacturacion()});
+function renderFact(d) {
+  const cuota = MESES.map(m => d.filter(r => r.mes === m).reduce((s, r) => s + r.factCuota, 0));
+  const exc = MESES.map(m => d.filter(r => r.mes === m).reduce((s, r) => s + r.factExc, 0));
+  
+  if (!ch2) {
+    ch2 = new Chart(document.getElementById('cFact'), {
+      type: 'bar',
+      data: { labels: MESES, datasets: [
+        { label: 'Cuota Fija', data: cuota, backgroundColor: 'rgba(232,197,71,.85)', borderRadius: 2, stack: 's' },
+        { label: 'Excedentes', data: exc, backgroundColor: 'rgba(79,195,247,.85)', borderRadius: 2, stack: 's' }
+      ]},
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: $${fmtDec(ctx.parsed.y)}` } } },
+        scales: { x: { grid: { color: '#1f2530' }, ticks: { color: '#7a8399', font: { size: 11 } } }, y: { grid: { color: '#1f2530' }, ticks: { color: '#7a8399', callback: v => `$${fmtDec(v)}` } } }
+      }
+    });
   } else {
-    ch2.data.labels=MESES;
-    ch2.data.datasets[0].data=cuota; ch2.data.datasets[1].data=exc; ch2.update();
+    ch2.data.labels = MESES;
+    ch2.data.datasets[0].data = cuota;
+    ch2.data.datasets[1].data = exc;
+    ch2.update();
   }
 }
 
-function renderCli(d){
-  const keys   = [...new Set(DATA.map(r=>r.cli))];
-  const totals = keys.map(k=>d.filter(r=>r.cli===k).reduce((s,r)=>s+fact(r).total,0));
-  const names  = keys.map(k=>(CLIMAP[k]?.nombre||k).split(' ').slice(0,2).join(' '));
-  const colors = keys.map(k=>{
-    const act  = filtro==='ALL'||filtro===k;
-    const base = CLIMAP[k]?.moneda==='Soles'?'105,240,174':'79,195,247';
-    return `rgba(${base},${act ? 0.85 : 0.2})`;
-  });
+function renderCli(d) {
+  const keys = [...new Set(DATA.map(r => r.cli))];
+  const totals = keys.map(k => d.filter(r => r.cli === k).reduce((s, r) => s + r.factTotal, 0));
+  const names = keys.map(k => CLIENTE_PARAMS[k]?.nombre?.split(' ').slice(0, 2).join(' ') || k);
+  const colors = keys.map(k => CLIENTE_PARAMS[k]?.moneda === 'Soles' ? 'rgba(105,240,174,0.85)' : 'rgba(79,195,247,0.85)');
   
-  const optionsCli = {
-    responsive:true, maintainAspectRatio:false, animation:{duration:320},
-    plugins:{
-      legend:{display:false},
-      tooltip:{
-        callbacks:{
-          label: ctx => {
-            const v = ctx.parsed.y ?? ctx.parsed;
-            const clienteKey = keys[ctx.dataIndex];
-            const moneda = CLIMAP[clienteKey]?.moneda || 'Soles';
-            return ` Total: ${fmtCurrency(v, moneda)}`;
-          }
-        }
+  if (!ch3) {
+    ch3 = new Chart(document.getElementById('cCli'), {
+      type: 'bar',
+      data: { labels: names, datasets: [{ label: 'Total', data: totals, backgroundColor: colors, borderRadius: 3 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Total: ${fmtCurrency(ctx.parsed.y, CLIENTE_PARAMS[keys[ctx.dataIndex]]?.moneda || 'Soles')}` } } },
+        scales: { x: { grid: { color: '#1f2530' }, ticks: { color: '#7a8399', font: { size: 11 } } }, y: { grid: { color: '#1f2530' }, ticks: { color: '#7a8399', callback: v => `$${fmtDec(v)}` } } }
       }
-    },
-    scales:{
-      x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
-      y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},
-         callback: v => `$${fmtDec(v)}`}
-    }
-  };
-  
-  if(!ch3){
-    ch3 = new Chart(document.getElementById('cCli'),{type:'bar',data:{labels:names,datasets:[
-      {label:'Total',data:totals,backgroundColor:colors,borderRadius:3}
-    ]},options:optionsCli});
+    });
   } else {
-    ch3.data.labels=names;
-    ch3.data.datasets[0].data=totals;
-    ch3.data.datasets[0].backgroundColor=colors;
+    ch3.data.labels = names;
+    ch3.data.datasets[0].data = totals;
+    ch3.data.datasets[0].backgroundColor = colors;
     ch3.update();
   }
 }
 
-function renderMix(d){
-  const keys = [...new Set(DATA.map(r=>r.cli))];
+function renderMix(d) {
+  const keys = [...new Set(DATA.map(r => r.cli))];
   const cont = document.getElementById('mixBars');
   cont.innerHTML = '';
-  keys.forEach(k=>{
-    const rows = d.filter(r=>r.cli===k);
-    const bn   = rows.reduce((s,r)=>s+r.bn,0);
-    const cl   = rows.reduce((s,r)=>s+r.color,0);
-    const tot  = bn+cl;
-    const pBN  = (tot?(bn/tot*100):0).toFixed(1);
-    const pCL  = (tot?(cl/tot*100):0).toFixed(1);
-    const mon  = CLIMAP[k]?.moneda==='Soles'?'🟢 Soles':'🔵 USD';
-    const act  = filtro==='ALL'||filtro===k;
-    const div  = document.createElement('div');
-    div.className = `mrow${act?' on':''}`;
+  keys.forEach(k => {
+    const rows = d.filter(r => r.cli === k);
+    const bn = rows.reduce((s, r) => s + r.bn, 0);
+    const cl = rows.reduce((s, r) => s + r.color, 0);
+    const tot = bn + cl;
+    const pBN = (tot ? (bn / tot * 100) : 0).toFixed(1);
+    const pCL = (tot ? (cl / tot * 100) : 0).toFixed(1);
+    const mon = CLIENTE_PARAMS[k]?.moneda === 'Soles' ? '🟢 Soles' : '🔵 USD';
+    const act = filtro === 'ALL' || filtro === k;
+    const div = document.createElement('div');
+    div.className = `mrow${act ? ' on' : ''}`;
     div.innerHTML = `
       <div class="minfo">
-        <span style="color:var(--text)">${CLIMAP[k]?.nombre||k}</span>
+        <span style="color:var(--text)">${CLIENTE_PARAMS[k]?.nombre || k}</span>
         <span style="font-size:.58rem;color:var(--muted)">${mon} · BN ${pBN}% / Color ${pCL}%</span>
       </div>
       <div class="mtrack">
-        <div class="mbn"  style="width:${pBN}%"></div>
+        <div class="mbn" style="width:${pBN}%"></div>
         <div class="mclr" style="width:${pCL}%"></div>
       </div>
       <div class="mnums">
@@ -781,18 +607,12 @@ function renderMix(d){
 }
 
 // ══════════════════════════════════════════════════════════
-// INICIO AUTOMÁTICO
+// INICIO
 // ══════════════════════════════════════════════════════════
-(async()=>{
-  loading(true);
-  try {
-    await cargar(LINK_FIJO_CONSUMOS, LINK_FIJO_CLIENTES);
-  } catch(e){
-    showError('Error al cargar: ' + e.message);
-  } finally {
-    loading(false);
-  }
-})();
+document.getElementById('overlay').classList.add('on');
+setTimeout(() => {
+  inicializarDatos();
+}, 500);
 </script>
 </body>
 </html>
