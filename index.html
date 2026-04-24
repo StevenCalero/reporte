@@ -17,34 +17,6 @@
   body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
   .wrap{max-width:1400px;margin:0 auto;position:relative;z-index:1;}
 
-  /* Login Modal Styles */
-  .login-modal {
-    position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,12,16,0.98);z-index:1000;
-    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);
-  }
-  .login-container {
-    background:var(--surface);border:1px solid var(--border);border-radius:12px;
-    padding:2rem;width:100%;max-width:400px;text-align:center;
-  }
-  .login-icon { font-size:3rem;margin-bottom:1rem; }
-  .login-title { font-family:'DM Serif Display',serif;margin-bottom:0.5rem;font-size:1.5rem; }
-  .login-subtitle { color:var(--muted);font-size:0.75rem;margin-bottom:1.5rem; }
-  .login-input {
-    width:100%;padding:0.75rem;background:var(--surface2);border:1px solid var(--border);
-    color:var(--text);font-family:'DM Mono',monospace;border-radius:6px;margin-bottom:0.75rem;
-    outline:none;transition:border-color 0.2s;
-  }
-  .login-input:focus { border-color:var(--accent2); }
-  .login-btn {
-    width:100%;padding:0.75rem;background:var(--accent);color:#0a0c10;
-    border:none;font-family:'DM Mono',monospace;font-weight:bold;border-radius:6px;
-    cursor:pointer;transition:opacity 0.2s;
-  }
-  .login-btn:hover { opacity:0.85; }
-  .login-error { color:var(--red);font-size:0.7rem;margin-top:1rem;display:none; }
-  .login-loading { display:none; margin-top:1rem; }
-  .login-loading.on { display:block; }
-
   /* ─── LOADING ─── */
   #overlay{display:none;position:fixed;inset:0;background:rgba(10,12,16,.92);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
   #overlay.on{display:flex;}
@@ -74,11 +46,15 @@
 
   /* ─── FILTROS ─── */
   .filters-wrap{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.75rem;}
+
+  /* Filtro cliente */
   .fbar{display:flex;align-items:center;gap:.6rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);flex-wrap:wrap;}
   .flbl{font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-right:.4rem;flex-shrink:0;white-space:nowrap;}
   .fbtn{padding:.38rem .9rem;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .15s;text-transform:uppercase;}
   .fbtn:hover{border-color:var(--accent);color:var(--accent);}
   .fbtn.active{background:var(--accent);color:#0a0c10;border-color:var(--accent);font-weight:600;}
+
+  /* Filtro fechas */
   .dbar{display:flex;align-items:center;gap:.8rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);flex-wrap:wrap;}
   .dbar .flbl{color:var(--accent2);border-color:var(--accent2);}
   .date-group{display:flex;align-items:center;gap:.5rem;}
@@ -93,9 +69,13 @@
   .btn-date.apply{background:var(--accent2);color:#0a0c10;border-color:var(--accent2);font-weight:700;}
   .btn-date.apply:hover{opacity:.85;}
   .btn-date.clear{border-color:var(--border);}
+
+  /* Indicador de filtro activo */
   .filter-active-badge{display:none;align-items:center;gap:.5rem;padding:.45rem 1rem;background:rgba(79,195,247,.08);border:1px solid rgba(79,195,247,.3);border-radius:2px;font-size:.62rem;color:var(--accent2);}
   .filter-active-badge.on{display:flex;}
   .filter-active-badge button{background:none;border:none;color:var(--accent2);cursor:pointer;font-size:.75rem;padding:0 .2rem;line-height:1;}
+
+  /* kpi */
   .krow{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem;}
   .kpi{background:var(--surface);border:1px solid var(--border);padding:1.4rem;position:relative;overflow:hidden;}
   .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
@@ -106,6 +86,8 @@
   .klbl{font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:.65rem;}
   .kval{font-family:'DM Serif Display',serif;font-size:2rem;line-height:1;}
   .ksub{font-size:.6rem;color:var(--muted);margin-top:.45rem;}
+
+  /* cards */
   .g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
   .card{background:var(--surface);border:1px solid var(--border);padding:1.6rem;}
   .chead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;}
@@ -116,6 +98,8 @@
   .legend{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.9rem;}
   .li{display:flex;align-items:center;gap:.45rem;font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
   .ld{width:8px;height:8px;border-radius:1px;flex-shrink:0;}
+
+  /* mix */
   .mbars{display:flex;flex-direction:column;gap:1.1rem;}
   .mrow{display:flex;flex-direction:column;gap:.38rem;opacity:.32;transition:opacity .3s;}
   .mrow.on{opacity:1;}
@@ -124,16 +108,60 @@
   .mbn{background:var(--accent);height:100%;}
   .mclr{background:var(--accent3);height:100%;}
   .mnums{display:flex;justify-content:space-between;font-size:.58rem;color:var(--muted);}
+
   @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
   .kpi{animation:fadeUp .5s ease both;}
   .kpi:nth-child(1){animation-delay:.05s} .kpi:nth-child(2){animation-delay:.1s}
   .kpi:nth-child(3){animation-delay:.15s} .kpi:nth-child(4){animation-delay:.2s}
+
   @media(max-width:900px){
     .krow{grid-template-columns:1fr 1fr}
     .g2{grid-template-columns:1fr}
     header{flex-direction:column;align-items:flex-start;gap:1rem}
     .dbar{flex-direction:column;align-items:flex-start;}
     .date-actions{margin-left:0;}
+  }
+
+  /* Login Modal Styles */
+  .login-modal {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10,12,16,0.98); z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  .login-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem; width: 100%; max-width: 400px;
+    text-align: center;
+  }
+  .login-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .login-title { font-family: 'DM Serif Display', serif; margin-bottom: 0.5rem; font-size: 1.5rem; }
+  .login-subtitle { color: var(--muted); font-size: 0.75rem; margin-bottom: 1.5rem; }
+  .login-input {
+    width: 100%; padding: 0.75rem; background: var(--surface2);
+    border: 1px solid var(--border); color: var(--text);
+    font-family: 'DM Mono', monospace; border-radius: 6px;
+    margin-bottom: 0.75rem; outline: none; transition: border-color 0.2s;
+  }
+  .login-input:focus { border-color: var(--accent2); }
+  .login-btn {
+    width: 100%; padding: 0.75rem; background: var(--accent);
+    color: #0a0c10; border: none; font-family: 'DM Mono', monospace;
+    font-weight: bold; border-radius: 6px; cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .login-btn:hover { opacity: 0.85; }
+  .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .login-error { color: var(--red); font-size: 0.7rem; margin-top: 1rem; display: none; }
+  .login-loading { display: none; margin-top: 1rem; }
+  .login-loading.on { display: block; }
+  .login-loading .spin {
+    width: 24px; height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
   }
 </style>
 </head>
@@ -142,16 +170,22 @@
 <!-- LOADING -->
 <div id="overlay">
   <div class="spin"></div>
-  <div class="spin-lbl">Cargando datos...</div>
+  <div class="spin-lbl">Cargando datos desde Google Sheets…</div>
 </div>
 
 <div class="wrap">
+
+  <!-- Error State -->
   <div id="errorState">
     <h2>Error al cargar</h2>
     <p id="errorMsg">No se pudieron obtener los datos.</p>
   </div>
 
+  <!-- ════════════════════════════════════════
+       DASHBOARD PRINCIPAL
+  ════════════════════════════════════════ -->
   <div id="dash">
+
     <header>
       <div class="ttl">
         <h1>Panel <span>Consumo</span></h1>
@@ -164,13 +198,18 @@
       </div>
     </header>
 
+    <!-- ─── FILTROS ─── -->
     <div class="filters-wrap">
+
+      <!-- Filtro por cliente -->
       <div class="fbar">
         <span class="flbl">▶ Cliente:</span>
         <div id="fbuts" style="display:flex;gap:.55rem;flex-wrap:wrap;">
           <button class="fbtn active" data-cli="ALL" onclick="setFiltro('ALL')">Todos</button>
         </div>
       </div>
+
+      <!-- Filtro por rango de fechas -->
       <div class="dbar">
         <span class="flbl">◈ Período:</span>
         <div class="date-group">
@@ -187,81 +226,160 @@
           <button class="btn-date clear" onclick="limpiarFiltroFecha()">✕ Limpiar</button>
         </div>
       </div>
+
+      <!-- Badge de filtro activo -->
       <div class="filter-active-badge" id="filterBadge">
         <span>◈ Período filtrado:</span>
         <span id="filterBadgeText">—</span>
         <button onclick="limpiarFiltroFecha()">✕</button>
       </div>
+
     </div>
 
+    <!-- KPIs -->
     <div class="krow">
-      <div class="kpi"><div class="klbl">Total Páginas BN</div><div class="kval" id="kbn" style="color:var(--accent)">—</div><div class="ksub">Período seleccionado</div></div>
-      <div class="kpi"><div class="klbl">Total Páginas Color</div><div class="kval" id="kclr" style="color:var(--accent2)">—</div><div class="ksub">Período seleccionado</div></div>
-      <div class="kpi"><div class="klbl">Facturación Total</div><div class="kval" id="kfact" style="color:var(--accent3)">—</div><div class="ksub" id="kfactsub">—</div></div>
-      <div class="kpi"><div class="klbl">Meses Registrados</div><div class="kval" id="kmes" style="color:var(--green)">—</div><div class="ksub" id="kmessub">—</div></div>
+      <div class="kpi">
+        <div class="klbl">Total Páginas BN</div>
+        <div class="kval" id="kbn" style="color:var(--accent)">—</div>
+        <div class="ksub">Período seleccionado</div>
+      </div>
+      <div class="kpi">
+        <div class="klbl">Total Páginas Color</div>
+        <div class="kval" id="kclr" style="color:var(--accent2)">—</div>
+        <div class="ksub">Período seleccionado</div>
+      </div>
+      <div class="kpi">
+        <div class="klbl">Facturación Total</div>
+        <div class="kval" id="kfact" style="color:var(--accent3)">—</div>
+        <div class="ksub" id="kfactsub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="klbl">Meses Registrados</div>
+        <div class="kval" id="kmes" style="color:var(--green)">—</div>
+        <div class="ksub" id="kmessub">—</div>
+      </div>
     </div>
 
+    <!-- Charts row 1 -->
     <div class="g2">
       <div class="card">
-        <div class="chead"><div><div class="ctitle">Consumo Mensual <span>Total</span></div><div class="csub">BN vs Color · Páginas</div></div></div>
+        <div class="chead"><div>
+          <div class="ctitle">Consumo Mensual <span>Total</span></div>
+          <div class="csub">BN vs Color · Páginas</div>
+        </div></div>
         <div class="cwrap"><canvas id="cConsumo"></canvas></div>
-        <div class="legend"><div class="li"><div class="ld" style="background:var(--accent)"></div>Blanco y Negro</div><div class="li"><div class="ld" style="background:var(--accent3)"></div>Color</div></div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:var(--accent)"></div>Blanco y Negro</div>
+          <div class="li"><div class="ld" style="background:var(--accent3)"></div>Color</div>
+        </div>
       </div>
       <div class="card">
-        <div class="chead"><div><div class="ctitle">Facturación <span>Desglosada</span></div><div class="csub">Cuota Fija vs Excedentes</div></div></div>
+        <div class="chead"><div>
+          <div class="ctitle">Facturación <span>Desglosada</span></div>
+          <div class="csub">Cuota Fija vs Excedentes</div>
+        </div></div>
         <div class="cwrap"><canvas id="cFact"></canvas></div>
-        <div class="legend"><div class="li"><div class="ld" style="background:var(--accent)"></div>Cuota Fija</div><div class="li"><div class="ld" style="background:var(--accent2)"></div>Excedentes</div></div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:var(--accent)"></div>Cuota Fija</div>
+          <div class="li"><div class="ld" style="background:var(--accent2)"></div>Excedentes / Consumo</div>
+        </div>
       </div>
     </div>
 
+    <!-- Charts row 2 -->
     <div class="g2">
       <div class="card">
-        <div class="chead"><div><div class="ctitle">Facturación por <span>Cliente</span></div><div class="csub">Valor total por cuenta</div></div></div>
+        <div class="chead"><div>
+          <div class="ctitle">Facturación por <span>Cliente</span></div>
+          <div class="csub">Valor total por cuenta</div>
+        </div></div>
         <div class="cwrap"><canvas id="cCli"></canvas></div>
-        <div class="legend"><div class="li"><div class="ld" style="background:var(--green)"></div>Soles (PEN)</div><div class="li"><div class="ld" style="background:var(--accent2)"></div>Dólares (USD)</div></div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:var(--green)"></div>Soles (PEN)</div>
+          <div class="li"><div class="ld" style="background:var(--accent2)"></div>Dólares (USD)</div>
+        </div>
       </div>
       <div class="card">
-        <div class="chead"><div><div class="ctitle">Mix de Consumo <span>por Cliente</span></div><div class="csub">BN vs Color · Proporción</div></div></div>
+        <div class="chead"><div>
+          <div class="ctitle">Mix de Consumo <span>por Cliente</span></div>
+          <div class="csub">BN vs Color · Proporción</div>
+        </div></div>
         <div class="mbars" id="mixBars"></div>
       </div>
     </div>
-  </div>
-</div>
+
+  </div><!-- /dash -->
+</div><!-- /wrap -->
 
 <script>
-// ══════════════════════════════════════════════════════════
-// CONFIGURACIÓN - ACTUALIZA ESTOS LINKS
-// ══════════════════════════════════════════════════════════
-const LINK_USUARIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=1456647949&single=true&output=csv";
-const LINK_FIJO_CONSUMOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=1319248561&single=true&output=csv";
-const LINK_FIJO_CLIENTES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=0&single=true&output=csv";
+// ============================================================
+// !!! IMPORTANTE: ACTUALIZA ESTE LINK CON EL DE TU HOJA "Usuarios" !!!
+// ============================================================
+// Para obtener el link:
+// 1. En Google Sheets, ve a la hoja "Usuarios"
+// 2. Archivo > Compartir > Publicar en la web
+// 3. Selecciona la hoja "Usuarios" y formato CSV
+// 4. Copia el link y pégalo abajo
+// ============================================================
+const LINK_USUARIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=TU_GID_USUARIOS&single=true&output=csv";
 
 // ══════════════════════════════════════════════════════════
-// FORMATO DE NÚMEROS
+// FORMATO DE NÚMEROS  (1,234,567.89)
 // ══════════════════════════════════════════════════════════
 const FMT_NUM  = new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 const FMT_DEC2 = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// Entero con separador de miles:  1,234,567
 const fmtInt  = n => FMT_NUM.format(Math.round(n));
+// Decimal dos lugares:            1,234.56
 const fmtDec  = n => FMT_DEC2.format(n);
 
+// Formatear moneda según el tipo
 function fmtCurrency(value, currency) {
-  if (currency === 'Soles') return `S/ ${fmtDec(value)}`;
-  if (currency === 'Dólares') return `USD ${fmtDec(value)}`;
+  if (currency === 'Soles') {
+    return `S/ ${fmtDec(value)}`;
+  } else if (currency === 'Dólares') {
+    return `USD ${fmtDec(value)}`;
+  }
   return fmtDec(value);
 }
 
 // ══════════════════════════════════════════════════════════
-// VARIABLES GLOBALES
+// LINKS FIJOS DE GOOGLE SHEETS (DATOS DEL DASHBOARD)
 // ══════════════════════════════════════════════════════════
-let DATA = [], CLIMAP = {}, MESES = [], filtro = 'ALL', fechaIni = null, fechaFin = null;
+const LINK_FIJO_CONSUMOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=1319248561&single=true&output=csv";
+const LINK_FIJO_CLIENTES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBYlfdxyVworzFfRG47odIqUSu-QYtwJtnCiF39mFtrGEGQN1iAM-mIKpix59CfeA4OmoCNvk5M9ni/pub?gid=0&single=true&output=csv";
+
+// ══════════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════════
+let DATA     = [];   // consumos enriquecidos (todos)
+let CLIMAP   = {};   // { CLI001: { nombre, moneda, cuota, ... } }
+let MESES    = [];   // etiquetas X ordenadas (del set filtrado)
+let filtro   = 'ALL';
+let fechaIni = null; // Date object
+let fechaFin = null; // Date object
 let ch1, ch2, ch3;
+
+// ══════════════════════════════════════════════════════════
+// LOADING / ERROR
+// ══════════════════════════════════════════════════════════
+const loading = on => document.getElementById('overlay').classList.toggle('on', on);
+
+function showError(msg){
+  document.getElementById('errorState').classList.add('on');
+  document.getElementById('errorMsg').textContent = msg;
+}
+
+// ============================================================
+// SECCIÓN DE SEGURIDAD Y LOGIN (DESDE GOOGLE SHEETS)
+// ============================================================
+
 let currentUser = null;
 let intentosLogin = 0;
 const MAX_INTENTOS = 3;
 
-// ══════════════════════════════════════════════════════════
-// FUNCIONES DE AUTENTICACIÓN
-// ══════════════════════════════════════════════════════════
+// Función para mostrar el modal de login
 function mostrarLogin() {
   const loginHTML = `
     <div id="loginModal" class="login-modal">
@@ -286,6 +404,29 @@ function mostrarLogin() {
   document.getElementById('loginUser').focus();
 }
 
+// Función para parsear CSV de usuarios
+function parseUsuariosCSV(csvText) {
+  const lines = csvText.trim().split(/\r?\n/);
+  if (lines.length === 0) return [];
+  
+  // Obtener encabezados (normalizados a minúsculas)
+  const headers = lines[0].split(',').map(h => h.replace(/["']/g, '').trim().toLowerCase());
+  
+  const usuarios = [];
+  for (let i = 1; i < lines.length; i++) {
+    const values = lines[i].split(',').map(v => v.replace(/["']/g, '').trim());
+    if (values.length >= 4 && values[0]) {
+      const usuarioObj = {};
+      headers.forEach((h, idx) => {
+        usuarioObj[h] = values[idx] || '';
+      });
+      usuarios.push(usuarioObj);
+    }
+  }
+  return usuarios;
+}
+
+// Función para validar las credenciales desde Google Sheets
 async function validarCredenciales() {
   const username = document.getElementById('loginUser').value.trim();
   const password = document.getElementById('loginPassword').value;
@@ -307,22 +448,32 @@ async function validarCredenciales() {
   try {
     // Cargar usuarios desde Google Sheets
     const response = await fetch(LINK_USUARIOS);
-    if (!response.ok) throw new Error('No se pudo cargar la lista de usuarios');
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} - No se pudo cargar la lista de usuarios`);
+    }
     
     const csvText = await response.text();
     const usuarios = parseUsuariosCSV(csvText);
     
+    if (usuarios.length === 0) {
+      throw new Error('No se encontraron usuarios en la hoja de cálculo');
+    }
+    
+    // Buscar usuario (case insensitive para usuario, case sensitive para contraseña)
     const user = usuarios.find(u => 
-      u.usuario.toLowerCase() === username.toLowerCase() && 
-      u.contraseña === password &&
-      u.activo === 'SI'
+      (u.usuario || u.user || u.username || '').toLowerCase() === username.toLowerCase() && 
+      (u.contraseña || u.password || u.pass || '') === password &&
+      (u.activo || u.status || '').toUpperCase() === 'SI'
     );
     
     if (user) {
-      currentUser = user;
+      currentUser = {
+        username: user.usuario || user.user || user.username || username,
+        rol: user.rol || user.role || 'Visualizador'
+      };
       document.getElementById('loginModal').remove();
       mostrarUsuarioLogueado();
-      iniciarDashboard();
+      iniciarDashboardConLogin();
     } else {
       intentosLogin++;
       const restantes = MAX_INTENTOS - intentosLogin;
@@ -334,7 +485,7 @@ async function validarCredenciales() {
         document.getElementById('loginPassword').disabled = true;
         loginBtn.disabled = true;
         setTimeout(() => {
-          document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0a0c10;color:#e8eaf0;font-family:monospace;flex-direction:column;gap:1rem;"><h1>🔒 Acceso Bloqueado</h1><p>Has superado el número máximo de intentos.</p></div>';
+          document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0a0c10;color:#e8eaf0;font-family:monospace;flex-direction:column;gap:1rem;"><h1>🔒 Acceso Bloqueado</h1><p>Has superado el número máximo de intentos.</p><p style="font-size:0.7rem;color:var(--muted)">Contacte al administrador.</p></div>';
         }, 2000);
       } else {
         errorEl.textContent = `❌ Usuario o contraseña incorrectos. Te quedan ${restantes} intento${restantes !== 1 ? 's' : ''}.`;
@@ -344,245 +495,503 @@ async function validarCredenciales() {
       }
     }
   } catch (error) {
-    errorEl.textContent = '❌ Error al validar credenciales. Contacte al administrador.';
-    errorEl.style.display = 'block';
     console.error('Error de autenticación:', error);
+    errorEl.textContent = `❌ Error al validar credenciales: ${error.message}. Verifique que la hoja "Usuarios" esté publicada correctamente.`;
+    errorEl.style.display = 'block';
   } finally {
     loginBtn.disabled = false;
     loadingEl.classList.remove('on');
   }
 }
 
-function parseUsuariosCSV(csvText) {
-  const lines = csvText.trim().split(/\r?\n/);
-  const headers = lines[0].split(',').map(h => h.replace(/["']/g, '').trim().toLowerCase());
-  
-  const usuarios = [];
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',').map(v => v.replace(/["']/g, '').trim());
-    if (values.length >= 4 && values[0]) {
-      usuarios.push({
-        usuario: values[0],
-        contraseña: values[1],
-        rol: values[2] || 'Visualizador',
-        activo: values[3]?.toUpperCase() || 'SI'
-      });
-    }
-  }
-  return usuarios;
-}
-
+// Mostrar el usuario logueado en el dashboard
 function mostrarUsuarioLogueado() {
   const headerRight = document.querySelector('.hright');
   if (headerRight && currentUser) {
     const userBadge = document.createElement('span');
     userBadge.className = 'badge user';
-    userBadge.innerHTML = `👤 ${currentUser.usuario} (${currentUser.rol})`;
+    userBadge.innerHTML = `👤 ${currentUser.username} (${currentUser.rol})`;
     headerRight.insertBefore(userBadge, headerRight.firstChild);
+    
+    // Botón de cerrar sesión
+    const logoutBtn = document.createElement('span');
+    logoutBtn.className = 'badge';
+    logoutBtn.style.cursor = 'pointer';
+    logoutBtn.style.borderColor = 'var(--red)';
+    logoutBtn.style.color = 'var(--red)';
+    logoutBtn.innerHTML = '🚪 Cerrar Sesión';
+    logoutBtn.onclick = () => {
+      if (confirm('¿Está seguro que desea cerrar sesión?')) {
+        location.reload();
+      }
+    };
+    headerRight.appendChild(logoutBtn);
   }
 }
 
-// ══════════════════════════════════════════════════════════
-// FUNCIONES DE CARGA DE DATOS (igual que antes)
-// ══════════════════════════════════════════════════════════
-const loading = on => document.getElementById('overlay').classList.toggle('on', on);
-function showError(msg) { document.getElementById('errorState').classList.add('on'); document.getElementById('errorMsg').textContent = msg; }
+// Variable para controlar que el dashboard solo se inicie una vez
+let dashboardIniciadoConLogin = false;
 
-function parseCSV(txt) {
-  const lines = txt.trim().split(/\r?\n/);
-  const splitLine = l => { const res=[]; let cur='', inQ=false; for(const ch of l){ if(ch==='"'){ inQ=!inQ; } else if(ch===','&&!inQ){ res.push(cur.trim()); cur=''; } else cur+=ch; } res.push(cur.trim()); return res; };
-  const rows = lines.map(splitLine);
-  const hdr = rows[0];
-  return { headers: hdr, rows: rows.slice(1).filter(r=>r.some(c=>c!=='')).map(r=>{ const o={}; hdr.forEach((h,i)=>o[h]=(r[i]||'').trim()); return o; }) };
+function iniciarDashboardConLogin() {
+  if (dashboardIniciadoConLogin) return;
+  dashboardIniciadoConLogin = true;
+  cargarDashboard();
 }
 
-async function cargarDatos() {
-  const [r1, r2] = await Promise.all([fetch(LINK_FIJO_CONSUMOS), fetch(LINK_FIJO_CLIENTES)]);
-  if (!r1.ok) throw new Error(`Error al cargar consumos (HTTP ${r1.status})`);
-  if (!r2.ok) throw new Error(`Error al cargar clientes (HTTP ${r2.status})`);
-  
+// Función que contiene toda la lógica original del dashboard
+async function cargarDashboard() {
+  loading(true);
+  try {
+    await cargar(LINK_FIJO_CONSUMOS, LINK_FIJO_CLIENTES);
+  } catch(e){
+    showError('Error al cargar: ' + e.message);
+  } finally {
+    loading(false);
+  }
+}
+
+// ============================================================
+// FIN DE LA SECCIÓN DE SEGURIDAD
+// A CONTINUACIÓN TU CÓDIGO ORIGINAL (sin modificar)
+// ============================================================
+
+// ══════════════════════════════════════════════════════════
+// FILTRO FECHAS
+// ══════════════════════════════════════════════════════════
+function validarFechas(){
+  const ini = document.getElementById('fechaInicio').value;
+  const fin = document.getElementById('fechaFin').value;
+  if(ini && fin && ini > fin){
+    document.getElementById('fechaFin').style.borderColor = 'var(--red)';
+  } else {
+    document.getElementById('fechaFin').style.borderColor = '';
+  }
+}
+
+function aplicarFiltroFecha(){
+  const ini = document.getElementById('fechaInicio').value;
+  const fin = document.getElementById('fechaFin').value;
+  if(!ini && !fin){ limpiarFiltroFecha(); return; }
+  if(ini && fin && ini > fin){
+    document.getElementById('fechaFin').style.borderColor = 'var(--red)';
+    return;
+  }
+  fechaIni = ini ? new Date(ini + 'T00:00:00') : null;
+  fechaFin = fin ? new Date(fin + 'T23:59:59') : null;
+
+  const badge = document.getElementById('filterBadge');
+  const txt   = document.getElementById('filterBadgeText');
+  const fmtDate = d => d ? d.toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'}) : '…';
+  txt.textContent = `${fmtDate(fechaIni)} → ${fmtDate(fechaFin)}`;
+  badge.classList.add('on');
+
+  renderAll();
+}
+
+function limpiarFiltroFecha(){
+  fechaIni = null;
+  fechaFin = null;
+  document.getElementById('fechaInicio').value = '';
+  document.getElementById('fechaFin').value    = '';
+  document.getElementById('fechaFin').style.borderColor = '';
+  document.getElementById('filterBadge').classList.remove('on');
+  renderAll();
+}
+
+function parseDate(fechaStr){
+  if(!fechaStr || typeof fechaStr !== 'string') return null;
+  const clean = fechaStr.trim();
+  if(/^\d{4}-\d{2}-\d{2}/.test(clean)) return new Date(clean.slice(0,10)+'T00:00:00');
+  if(/^\d{2}\/\d{2}\/\d{4}/.test(clean)){
+    const [dd,mm,yyyy] = clean.split('/');
+    return new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
+  }
+  const d = new Date(clean);
+  return isNaN(d) ? null : d;
+}
+
+function norm(s){
+  return (s||'').toLowerCase()
+    .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
+    .replace(/[^a-z0-9]/g,'');
+}
+
+function col(obj, ...aliases){
+  const normObj = {};
+  Object.keys(obj).forEach(k => normObj[norm(k)] = obj[k]);
+  for(const a of aliases){
+    const v = normObj[norm(a)];
+    if(v !== undefined) return v;
+  }
+  return '';
+}
+
+function parseCSV(txt){
+  const lines = txt.trim().split(/\r?\n/);
+  const splitLine = l => {
+    const res=[]; let cur='', inQ=false;
+    for(const ch of l){
+      if(ch==='"'){ inQ=!inQ; }
+      else if(ch===','&&!inQ){ res.push(cur.trim()); cur=''; }
+      else cur+=ch;
+    }
+    res.push(cur.trim());
+    return res;
+  };
+  const rows = lines.map(splitLine);
+  const hdr  = rows[0];
+  return {
+    headers: hdr,
+    rows: rows.slice(1).filter(r=>r.some(c=>c!=='')).map(r=>{
+      const o={}; hdr.forEach((h,i)=>o[h]=(r[i]||'').trim()); return o;
+    })
+  };
+}
+
+function mesLabel(f){
+  if(!f || typeof f !== 'string') return '?';
+  const clean = f.trim();
+  let d;
+  if(/^\d{4}-\d{2}-\d{2}/.test(clean)){
+    d = new Date(clean.slice(0,10));
+  } else if(/^\d{2}\/\d{2}\/\d{4}/.test(clean)){
+    const [dd,mm,yyyy] = clean.split('/');
+    d = new Date(`${yyyy}-${mm}-${dd}`);
+  } else {
+    d = new Date(clean);
+  }
+  if(isNaN(d.getTime())) return clean;
+  return d.toLocaleString('es-PE',{month:'short',year:'2-digit'});
+}
+
+function mesSort(a,b){
+  const M=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const p=s=>{
+    const parts = s.toLowerCase().split(' ');
+    const mi = M.findIndex(m => parts[0].startsWith(m));
+    const y  = parseInt(parts[1]||'0');
+    return y*12+(mi>=0?mi:0);
+  };
+  return p(a)-p(b);
+}
+
+async function cargar(u1, u2){
+  const [r1,r2] = await Promise.all([fetch(u1), fetch(u2)]);
+  if(!r1.ok) throw new Error(`No se pudo leer Fact_Consumos (HTTP ${r1.status})`);
+  if(!r2.ok) throw new Error(`No se pudo leer Dim_Clientes (HTTP ${r2.status})`);
+
   const txt1 = await r1.text();
   const txt2 = await r2.text();
   const parsed1 = parseCSV(txt1);
   const parsed2 = parseCSV(txt2);
-  
-  CLIMAP = {};
-  parsed2.rows.forEach(r => {
-    const id = r['ID_Cliente'] || r['IDCliente'] || r['id_cliente'] || r['id'] || '';
-    if (!id) return;
-    CLIMAP[id.trim()] = {
-      nombre: r['Nombre_Cliente'] || r['nombre'] || id,
-      moneda: r['Moneda'] || 'Soles',
-      cuota: parseFloat(r['Cuota_Fija'] || r['cuota'] || 0),
-      bolsaBN: parseFloat(r['Bolsa_BN'] || r['bolsa_bn'] || 0),
-      bolsaCLR: parseFloat(r['Bolsa_Color'] || r['bolsa_color'] || 0),
-      exBN: parseFloat(r['Costo_Excedente_BN'] || r['excedente_bn'] || 0),
-      exCLR: parseFloat(r['Costo_Excedente_Color'] || r['excedente_color'] || 0)
+
+  if(parsed1.rows.length === 0) throw new Error('Fact_Consumos está vacío.');
+  if(parsed2.rows.length === 0) throw new Error('Dim_Clientes está vacío.');
+
+  CLIMAP={};
+  parsed2.rows.forEach(r=>{
+    const id = col(r,'ID_Cliente','IDCliente','id_cliente','cliente_id','id','codigo');
+    if(!id) return;
+    CLIMAP[id.trim()]={
+      nombre:  col(r,'Nombre_Cliente','NombreCliente','nombre_cliente','nombre','razon_social','cliente') || id,
+      moneda:  col(r,'Moneda','moneda','currency') || 'Soles',
+      cuota:   +col(r,'Cuota_Fija','CuotaFija','cuota_fija','cuota','fijo') || 0,
+      bolsaBN: +col(r,'Bolsa_BN','BolsaBN','bolsa_bn','bolsa bn','paginas_bn_incluidas') || 0,
+      bolsaCLR:+col(r,'Bolsa_Color','BolsaColor','bolsa_color','bolsa color') || 0,
+      exBN:    +col(r,'Costo_Excedente_BN','CostoExcedenteBN','costo_excedente_bn','excedente_bn','precio_bn') || 0,
+      exCLR:   +col(r,'Costo_Excedente_Color','CostoExcedenteColor','costo_excedente_color','excedente_color','precio_color') || 0,
     };
   });
-  
-  DATA = [];
-  for (const r of parsed1.rows) {
-    const id = r['ID_Cliente'] || r['IDCliente'] || r['id_cliente'] || r['id'] || '';
-    const fecha = r['Fecha_Lectura'] || r['fecha'] || '';
-    const bn = parseFloat(r['Paginas_BN'] || r['bn'] || 0);
-    const color = parseFloat(r['Paginas_Color'] || r['color'] || 0);
-    const cid = id.trim();
-    const c = CLIMAP[cid] || {};
-    const fechaDate = new Date(fecha);
-    const mesLabel = isNaN(fechaDate) ? '?' : fechaDate.toLocaleString('es-PE', { month: 'short', year: '2-digit' });
-    const excBN = Math.max(0, bn - (c.bolsaBN || 0)) * (c.exBN || 0);
-    const excCLR = Math.max(0, color - (c.bolsaCLR || 0)) * (c.exCLR || 0);
+
+  if(Object.keys(CLIMAP).length === 0)
+    throw new Error('No se encontró ID_Cliente en Dim_Clientes.');
+
+  DATA = parsed1.rows.map(r=>{
+    const id    = col(r,'ID_Cliente','IDCliente','id_cliente','cliente_id','id','codigo');
+    const fecha = col(r,'Fecha_Lectura','FechaLectura','fecha_lectura','fecha','date','periodo');
+    const bn    = col(r,'Paginas_BN','PaginasBN','paginas_bn','bn','blanco_negro','byn');
+    const clr   = col(r,'Paginas_Color','PaginasColor','paginas_color','color','colour');
+    const cid   = (id||'').trim();
+    const c     = CLIMAP[cid] || {};
+    
     const cuota = c.cuota || 0;
-    DATA.push({
-      cli: cid, nombre: c.nombre || cid, mes: mesLabel, fechaObj: fechaDate,
-      bn, color, moneda: c.moneda || 'Soles', cuota, bolsaBN: c.bolsaBN || 0,
-      bolsaCLR: c.bolsaCLR || 0, exBN: c.exBN || 0, exCLR: c.exCLR || 0,
-      factCuota: cuota, factExc: excBN + excCLR, factTotal: cuota + excBN + excCLR
-    });
-  }
-  DATA = DATA.filter(r => r.cli && r.mes !== '?');
-  
-  const fechas = DATA.map(r => r.fechaObj).filter(Boolean).sort((a,b)=>a-b);
+    const excBN = Math.max(0, (+bn || 0) - (c.bolsaBN || 0)) * (c.exBN || 0);
+    const excCLR = Math.max(0, (+clr || 0) - (c.bolsaCLR || 0)) * (c.exCLR || 0);
+    const exc = excBN + excCLR;
+    
+    return {
+      cli:      cid,
+      nombre:   c.nombre  || cid,
+      mes:      mesLabel(fecha),
+      fechaRaw: fecha,
+      fechaObj: parseDate(fecha),
+      bn:       +bn  || 0,
+      color:    +clr || 0,
+      moneda:   c.moneda  || 'Soles',
+      cuota:    cuota,
+      bolsaBN:  c.bolsaBN  || 0,
+      bolsaCLR: c.bolsaCLR || 0,
+      exBN:     c.exBN     || 0,
+      exCLR:    c.exCLR    || 0,
+      factCuota: cuota,
+      factExc: exc,
+      factTotal: cuota + exc
+    };
+  }).filter(r=>r.cli && r.mes !== '?');
+
+  if(DATA.length === 0)
+    throw new Error('No se pudieron procesar filas de Fact_Consumos.');
+
+  const fechas = DATA.map(r=>r.fechaObj).filter(Boolean).sort((a,b)=>a-b);
   if(fechas.length){
     const toISO = d => d.toISOString().slice(0,10);
     document.getElementById('fechaInicio').value = toISO(fechas[0]);
-    document.getElementById('fechaFin').value = toISO(fechas[fechas.length-1]);
+    document.getElementById('fechaFin').value    = toISO(fechas[fechas.length-1]);
   }
+
   document.getElementById('lastUp').textContent = 'Actualizado: '+new Date().toLocaleString('es-PE');
+
+  construirFiltros();
+  renderAll();
+
+  document.getElementById('dash').classList.add('on');
 }
 
-function construirFiltros() {
+const CLI_PALETA = ['var(--green)','var(--accent2)','var(--accent3)','#ce93d8','#ffb74d','#80cbc4'];
+
+function construirFiltros(){
   const keys = [...new Set(DATA.map(r=>r.cli))];
   const cont = document.getElementById('fbuts');
-  cont.innerHTML = '<button class="fbtn active" data-cli="ALL" onclick="setFiltro(\'ALL\')">Todos</button>';
-  keys.forEach(k => {
-    const nombre = CLIMAP[k]?.nombre || k;
-    const corto = nombre.split(' ').slice(0,2).join(' ');
+  cont.innerHTML = `<button class="fbtn active" data-cli="ALL" onclick="setFiltro('ALL')">Todos</button>`;
+  keys.forEach((k,i)=>{
+    const nombre = CLIMAP[k]?.nombre||k;
+    const corto  = nombre.split(' ').slice(0,2).join(' ');
+    const color  = CLI_PALETA[i%CLI_PALETA.length];
     const b = document.createElement('button');
-    b.className = 'fbtn';
-    b.dataset.cli = k;
-    b.textContent = corto;
-    b.onclick = () => setFiltro(k);
+    b.className='fbtn'; b.dataset.cli=k; b.textContent=corto;
+    b.onclick=()=> setFiltro(k, b, color);
     cont.appendChild(b);
   });
 }
 
-function setFiltro(cli) {
+function setFiltro(cli, btnEl, color){
   filtro = cli;
-  document.querySelectorAll('.fbtn').forEach(b => { b.classList.remove('active'); });
-  if (cli === 'ALL') document.querySelector('[data-cli="ALL"]').classList.add('active');
-  else document.querySelector(`.fbtn[data-cli="${cli}"]`).classList.add('active');
+  document.querySelectorAll('.fbtn').forEach(b=>{
+    b.classList.remove('active');
+    b.style.background=b.style.borderColor=b.style.color='';
+  });
+  if(cli==='ALL'){
+    document.querySelector('[data-cli="ALL"]').classList.add('active');
+  } else if(btnEl){
+    btnEl.classList.add('active');
+    btnEl.style.background  = color;
+    btnEl.style.borderColor = color;
+    btnEl.style.color       = '#0a0c10';
+  }
   renderAll();
 }
 
-function getFilt() {
-  let d = filtro === 'ALL' ? [...DATA] : DATA.filter(r => r.cli === filtro);
-  if (fechaIni || fechaFin) d = d.filter(r => (!fechaIni || r.fechaObj >= fechaIni) && (!fechaFin || r.fechaObj <= fechaFin));
+function getFilt(){
+  let d = filtro === 'ALL' ? DATA : DATA.filter(r=>r.cli===filtro);
+  if(fechaIni || fechaFin){
+    d = d.filter(r=>{
+      if(!r.fechaObj) return true;
+      if(fechaIni && r.fechaObj < fechaIni) return false;
+      if(fechaFin && r.fechaObj > fechaFin) return false;
+      return true;
+    });
+  }
   return d;
 }
 
-function renderAll() {
+function renderAll(){
   const d = getFilt();
-  MESES = [...new Set(d.map(r=>r.mes))].sort((a,b) => {
-    const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    const getVal = s => { const parts = s.toLowerCase().split(' '); const mi = meses.findIndex(m => parts[0].startsWith(m)); const y = parseInt(parts[1]||'0'); return y*12+(mi>=0?mi:0); };
-    return getVal(a)-getVal(b);
-  });
+  MESES = [...new Set(d.map(r=>r.mes))].sort(mesSort);
   document.getElementById('periodoLbl').textContent = MESES.length ? `${MESES[0]} – ${MESES[MESES.length-1]}` : '—';
-  renderKPIs(d); renderConsumo(d); renderFact(d); renderCli(d); renderMix(d);
+  renderKPIs(d);
+  renderConsumo(d);
+  renderFact(d);
+  renderCli(d);
+  renderMix(d);
 }
 
-function renderKPIs(d) {
-  const bn = d.reduce((s,r)=>s+r.bn,0);
-  const clr = d.reduce((s,r)=>s+r.color,0);
+function renderKPIs(d){
+  const bn    = d.reduce((s,r)=>s+r.bn,0);
+  const clr   = d.reduce((s,r)=>s+r.color,0);
   const soles = d.filter(r=>r.moneda==='Soles').reduce((s,r)=>s+r.factTotal,0);
-  const usd = d.filter(r=>r.moneda==='Dólares').reduce((s,r)=>s+r.factTotal,0);
-  document.getElementById('kbn').textContent = fmtInt(bn);
+  const usd   = d.filter(r=>r.moneda==='Dólares').reduce((s,r)=>s+r.factTotal,0);
+  const meses = [...new Set(d.map(r=>r.mes))].sort(mesSort);
+
+  document.getElementById('kbn').textContent  = fmtInt(bn);
   document.getElementById('kclr').textContent = fmtInt(clr);
+
   if(soles>0 && usd>0){
-    document.getElementById('kfact').textContent = `S/ ${fmtDec(soles)}`;
+    document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
     document.getElementById('kfactsub').textContent = `+ USD ${fmtDec(usd)}`;
   } else if(soles>0){
-    document.getElementById('kfact').textContent = `S/ ${fmtDec(soles)}`;
+    document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
     document.getElementById('kfactsub').textContent = 'Moneda: Soles';
   } else if(usd>0){
-    document.getElementById('kfact').textContent = `USD ${fmtDec(usd)}`;
+    document.getElementById('kfact').textContent    = `USD ${fmtDec(usd)}`;
     document.getElementById('kfactsub').textContent = 'Moneda: Dólares';
+  } else {
+    document.getElementById('kfact').textContent    = '—';
+    document.getElementById('kfactsub').textContent = '';
   }
-  document.getElementById('kmes').textContent = MESES.length;
-  document.getElementById('kmessub').textContent = MESES.join(' · ');
+
+  document.getElementById('kmes').textContent    = meses.length;
+  document.getElementById('kmessub').textContent = meses.join(' · ');
 }
 
-function renderConsumo(d) {
-  const bn = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.bn,0));
+const boptsConsumo = () => ({
+  responsive:true, maintainAspectRatio:false, animation:{duration:320},
+  plugins:{
+    legend:{display:false},
+    tooltip:{
+      callbacks:{
+        label: ctx => ` ${ctx.dataset.label}: ${fmtInt(ctx.parsed.y)} páginas`
+      }
+    }
+  },
+  scales:{
+    x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}, callback: v => fmtInt(v)}}
+  }
+});
+
+const boptsFacturacion = (moneda = 'Soles') => ({
+  responsive:true, maintainAspectRatio:false, animation:{duration:320},
+  plugins:{
+    legend:{display:false},
+    tooltip:{
+      callbacks:{
+        label: ctx => ` ${ctx.dataset.label}: ${fmtCurrency(ctx.parsed.y, moneda)}`
+      }
+    }
+  },
+  scales:{
+    x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}, callback: v => fmtCurrency(v, moneda)}}
+  }
+});
+
+function renderConsumo(d){
+  const bn  = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.bn,0));
   const clr = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.color,0));
-  if(!ch1) ch1 = new Chart(document.getElementById('cConsumo'),{type:'bar',data:{labels:MESES,datasets:[{label:'BN',data:bn,backgroundColor:'rgba(232,197,71,.85)',stack:'s'},{label:'Color',data:clr,backgroundColor:'rgba(240,98,146,.85)',stack:'s'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmtInt(ctx.parsed.y)} páginas`}}},scales:{x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399'}},y:{grid:{color:'#1f2530'},ticks:{callback:v=>fmtInt(v)}}}}});
-  else { ch1.data.labels=MESES; ch1.data.datasets[0].data=bn; ch1.data.datasets[1].data=clr; ch1.update(); }
+  if(!ch1){
+    ch1 = new Chart(document.getElementById('cConsumo'),{type:'bar',data:{labels:MESES,datasets:[
+      {label:'BN',  data:bn,  backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
+      {label:'Color', data:clr, backgroundColor:'rgba(240,98,146,.85)',borderRadius:2,stack:'s'},
+    ]},options:boptsConsumo()});
+  } else {
+    ch1.data.labels=MESES;
+    ch1.data.datasets[0].data=bn; ch1.data.datasets[1].data=clr; ch1.update();
+  }
 }
 
-function renderFact(d) {
+function renderFact(d){
   const cuota = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.factCuota,0));
-  const exc = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.factExc,0));
+  const exc   = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.factExc,0));
+  
   const hasSoles = d.some(r=>r.moneda==='Soles');
   const hasDolares = d.some(r=>r.moneda==='Dólares');
-  let moneda = 'USD';
-  if (hasSoles && !hasDolares) moneda = 'Soles';
-  else if (!hasSoles && hasDolares) moneda = 'Dólares';
-  if(!ch2) ch2 = new Chart(document.getElementById('cFact'),{type:'bar',data:{labels:MESES,datasets:[{label:'Cuota Fija',data:cuota,backgroundColor:'rgba(232,197,71,.85)',stack:'s'},{label:'Excedentes',data:exc,backgroundColor:'rgba(79,195,247,.85)',stack:'s'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmtCurrency(ctx.parsed.y, moneda)}`}}},scales:{x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399'}},y:{grid:{color:'#1f2530'},ticks:{callback:v=>fmtCurrency(v, moneda)}}}}});
-  else { ch2.data.labels=MESES; ch2.data.datasets[0].data=cuota; ch2.data.datasets[1].data=exc; ch2.options.scales.y.ticks.callback = v=>fmtCurrency(v, moneda); ch2.update(); }
+  let monedaLabel = 'USD';
+  if (hasSoles && !hasDolares) monedaLabel = 'Soles';
+  else if (!hasSoles && hasDolares) monedaLabel = 'Dólares';
+  else monedaLabel = 'USD';
+  
+  if(!ch2){
+    ch2 = new Chart(document.getElementById('cFact'),{type:'bar',data:{labels:MESES,datasets:[
+      {label:'Cuota Fija', data:cuota, backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
+      {label:'Excedentes', data:exc,   backgroundColor:'rgba(79,195,247,.85)',borderRadius:2,stack:'s'},
+    ]},options:boptsFacturacion(monedaLabel)});
+  } else {
+    ch2.data.labels=MESES;
+    ch2.data.datasets[0].data=cuota; 
+    ch2.data.datasets[1].data=exc;
+    ch2.options = boptsFacturacion(monedaLabel);
+    ch2.update();
+  }
 }
 
-function renderCli(d) {
+function renderCli(d){
   const keys = [...new Set(DATA.map(r=>r.cli))];
   const totals = keys.map(k=>d.filter(r=>r.cli===k).reduce((s,r)=>s+r.factTotal,0));
   const names = keys.map(k=>(CLIMAP[k]?.nombre||k).split(' ').slice(0,2).join(' '));
-  const colors = keys.map(k=>CLIMAP[k]?.moneda==='Soles' ? 'rgba(105,240,174,0.85)' : 'rgba(79,195,247,0.85)');
-  if(!ch3) ch3 = new Chart(document.getElementById('cCli'),{type:'bar',data:{labels:names,datasets:[{label:'Total',data:totals,backgroundColor:colors}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const moneda = CLIMAP[keys[ctx.dataIndex]]?.moneda||'Soles'; return ` Total: ${fmtCurrency(ctx.parsed.y, moneda)}`}}}},scales:{x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399'}},y:{grid:{color:'#1f2530'},ticks:{callback:v=>`$${fmtDec(v)}`}}}}});
-  else { ch3.data.labels=names; ch3.data.datasets[0].data=totals; ch3.data.datasets[0].backgroundColor=colors; ch3.update(); }
+  const colors = keys.map(k=>{
+    const act = filtro==='ALL'||filtro===k;
+    const base = CLIMAP[k]?.moneda==='Soles'?'105,240,174':'79,195,247';
+    return `rgba(${base},${act ? 0.85 : 0.2})`;
+  });
+  
+  const optionsCli = {
+    responsive:true, maintainAspectRatio:false, animation:{duration:320},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          label: (ctx) => {
+            const clienteKey = keys[ctx.dataIndex];
+            const moneda = CLIMAP[clienteKey]?.moneda || 'Soles';
+            return ` Total: ${fmtCurrency(ctx.parsed.y, moneda)}`;
+          }
+        }
+      }
+    },
+    scales:{
+      x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+      y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}, callback: v => `$${fmtDec(v)}`}}
+    }
+  };
+  
+  if(!ch3){
+    ch3 = new Chart(document.getElementById('cCli'),{type:'bar',data:{labels:names,datasets:[
+      {label:'Total',data:totals,backgroundColor:colors,borderRadius:3}
+    ]},options:optionsCli});
+  } else {
+    ch3.data.labels=names;
+    ch3.data.datasets[0].data=totals;
+    ch3.data.datasets[0].backgroundColor=colors;
+    ch3.options = optionsCli;
+    ch3.update();
+  }
 }
 
-function renderMix(d) {
+function renderMix(d){
   const keys = [...new Set(DATA.map(r=>r.cli))];
   const cont = document.getElementById('mixBars');
   cont.innerHTML = '';
   keys.forEach(k=>{
     const rows = d.filter(r=>r.cli===k);
-    const bn = rows.reduce((s,r)=>s+r.bn,0);
-    const cl = rows.reduce((s,r)=>s+r.color,0);
-    const tot = bn+cl;
-    const pBN = (tot?(bn/tot*100):0).toFixed(1);
-    const pCL = (tot?(cl/tot*100):0).toFixed(1);
-    const mon = CLIMAP[k]?.moneda==='Soles'?'🟢 Soles':'🔵 USD';
-    const act = filtro==='ALL'||filtro===k;
-    const div = document.createElement('div');
+    const bn   = rows.reduce((s,r)=>s+r.bn,0);
+    const cl   = rows.reduce((s,r)=>s+r.color,0);
+    const tot  = bn+cl;
+    const pBN  = (tot?(bn/tot*100):0).toFixed(1);
+    const pCL  = (tot?(cl/tot*100):0).toFixed(1);
+    const mon  = CLIMAP[k]?.moneda==='Soles'?'🟢 Soles':'🔵 USD';
+    const act  = filtro==='ALL'||filtro===k;
+    const div  = document.createElement('div');
     div.className = `mrow${act?' on':''}`;
-    div.innerHTML = `<div class="minfo"><span style="color:var(--text)">${CLIMAP[k]?.nombre||k}</span><span style="font-size:.58rem;color:var(--muted)">${mon} · BN ${pBN}% / Color ${pCL}%</span></div><div class="mtrack"><div class="mbn" style="width:${pBN}%"></div><div class="mclr" style="width:${pCL}%"></div></div><div class="mnums"><span>${fmtInt(bn)} págs BN</span><span>${fmtInt(cl)} págs Color</span></div>`;
+    div.innerHTML = `
+      <div class="minfo">
+        <span style="color:var(--text)">${CLIMAP[k]?.nombre||k}</span>
+        <span style="font-size:.58rem;color:var(--muted)">${mon} · BN ${pBN}% / Color ${pCL}%</span>
+      </div>
+      <div class="mtrack">
+        <div class="mbn"  style="width:${pBN}%"></div>
+        <div class="mclr" style="width:${pCL}%"></div>
+      </div>
+      <div class="mnums">
+        <span>${fmtInt(bn)} págs BN</span>
+        <span>${fmtInt(cl)} págs Color</span>
+      </div>`;
     cont.appendChild(div);
   });
 }
 
-function validarFechas(){ const ini=document.getElementById('fechaInicio').value; const fin=document.getElementById('fechaFin').value; if(ini&&fin&&ini>fin) document.getElementById('fechaFin').style.borderColor='var(--red)'; else document.getElementById('fechaFin').style.borderColor=''; }
-function aplicarFiltroFecha(){ const ini=document.getElementById('fechaInicio').value; const fin=document.getElementById('fechaFin').value; if(!ini&&!fin){ limpiarFiltroFecha(); return; } if(ini&&fin&&ini>fin) return; fechaIni=ini?new Date(ini+'T00:00:00'):null; fechaFin=fin?new Date(fin+'T23:59:59'):null; const badge=document.getElementById('filterBadge'); const txt=document.getElementById('filterBadgeText'); const fmtDate=d=>d?d.toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'}):'…'; txt.textContent=`${fmtDate(fechaIni)} → ${fmtDate(fechaFin)}`; badge.classList.add('on'); renderAll(); }
-function limpiarFiltroFecha(){ fechaIni=null; fechaFin=null; document.getElementById('fechaInicio').value=''; document.getElementById('fechaFin').value=''; document.getElementById('fechaFin').style.borderColor=''; document.getElementById('filterBadge').classList.remove('on'); renderAll(); }
-
-let dashboardIniciado = false;
-async function iniciarDashboard() {
-  if (dashboardIniciado) return;
-  dashboardIniciado = true;
-  loading(true);
-  try {
-    await cargarDatos();
-    construirFiltros();
-    renderAll();
-    document.getElementById('dash').classList.add('on');
-  } catch(e) { showError('Error al cargar: ' + e.message); }
-  finally { loading(false); }
-}
-
-// ══════════════════════════════════════════════════════════
-// INICIAR CON LOGIN
-// ══════════════════════════════════════════════════════════
+// ============================================================
+// INICIO: Mostrar login primero
+// ============================================================
 mostrarLogin();
 </script>
 </body>
