@@ -280,6 +280,16 @@ const fmtInt  = n => FMT_NUM.format(Math.round(n));
 // Decimal dos lugares:            1,234.56
 const fmtDec  = n => FMT_DEC2.format(n);
 
+// Formatear moneda según el tipo
+function fmtCurrency(value, currency) {
+  if (currency === 'Soles') {
+    return `S/ ${fmtDec(value)}`;
+  } else if (currency === 'Dólares') {
+    return `USD ${fmtDec(value)}`;
+  }
+  return fmtDec(value);
+}
+
 // ══════════════════════════════════════════════════════════
 // LINKS FIJOS DE GOOGLE SHEETS
 // ══════════════════════════════════════════════════════════
@@ -467,7 +477,7 @@ async function cargar(u1, u2){
   if(Object.keys(CLIMAP).length === 0)
     throw new Error('No se encontró ID_Cliente en Dim_Clientes.');
 
-  // Enriquecer consumos — guardamos también la fecha original para filtrar
+  // Enriquecer consumos
   DATA = parsed1.rows.map(r=>{
     const id    = col(r,'ID_Cliente','IDCliente','id_cliente','cliente_id','id','codigo');
     const fecha = col(r,'Fecha_Lectura','FechaLectura','fecha_lectura','fecha','date','periodo');
@@ -475,20 +485,30 @@ async function cargar(u1, u2){
     const clr   = col(r,'Paginas_Color','PaginasColor','paginas_color','color','colour');
     const cid   = (id||'').trim();
     const c     = CLIMAP[cid] || {};
+    
+    // Calcular facturación correctamente
+    const cuota = c.cuota || 0;
+    const excBN = Math.max(0, (+bn || 0) - (c.bolsaBN || 0)) * (c.exBN || 0);
+    const excCLR = Math.max(0, (+clr || 0) - (c.bolsaCLR || 0)) * (c.exCLR || 0);
+    const exc = excBN + excCLR;
+    
     return {
       cli:      cid,
       nombre:   c.nombre  || cid,
       mes:      mesLabel(fecha),
-      fechaRaw: fecha,               // ← guardamos la fecha original
-      fechaObj: parseDate(fecha),    // ← objeto Date para comparar
+      fechaRaw: fecha,
+      fechaObj: parseDate(fecha),
       bn:       +bn  || 0,
       color:    +clr || 0,
       moneda:   c.moneda  || 'Soles',
-      cuota:    c.cuota   || 0,
+      cuota:    cuota,
       bolsaBN:  c.bolsaBN  || 0,
       bolsaCLR: c.bolsaCLR || 0,
       exBN:     c.exBN     || 0,
       exCLR:    c.exCLR    || 0,
+      factCuota: cuota,
+      factExc: exc,
+      factTotal: cuota + exc
     };
   }).filter(r=>r.cli && r.mes !== '?');
 
@@ -552,10 +572,9 @@ function setFiltro(cli, btnEl, color){
 function getFilt(){
   let d = filtro === 'ALL' ? DATA : DATA.filter(r=>r.cli===filtro);
 
-  // Aplicar filtro de fecha si está activo
   if(fechaIni || fechaFin){
     d = d.filter(r=>{
-      if(!r.fechaObj) return true; // si no hay fecha, incluir
+      if(!r.fechaObj) return true;
       if(fechaIni && r.fechaObj < fechaIni) return false;
       if(fechaFin && r.fechaObj > fechaFin) return false;
       return true;
@@ -565,26 +584,13 @@ function getFilt(){
 }
 
 // ══════════════════════════════════════════════════════════
-// FACTURACIÓN
-// ══════════════════════════════════════════════════════════
-function fact(r){
-  const cuota = r.cuota;
-  const exc   = r.cuota === 0
-    ? r.bn*r.exBN + r.color*r.exCLR
-    : (r.bn>r.bolsaBN?(r.bn-r.bolsaBN)*r.exBN:0)+(r.color>r.bolsaCLR?(r.color-r.bolsaCLR)*r.exCLR:0);
-  return {cuota, exc, total:cuota+exc};
-}
-
-// ══════════════════════════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════════════════════════
 function renderAll(){
   const d = getFilt();
 
-  // Actualizar meses según los datos filtrados
   MESES = [...new Set(d.map(r=>r.mes))].sort(mesSort);
 
-  // Actualizar badge de período
   document.getElementById('periodoLbl').textContent =
     MESES.length ? `${MESES[0]} – ${MESES[MESES.length-1]}` : '—';
 
@@ -598,14 +604,14 @@ function renderAll(){
 function renderKPIs(d){
   const bn    = d.reduce((s,r)=>s+r.bn,0);
   const clr   = d.reduce((s,r)=>s+r.color,0);
-  const soles = d.filter(r=>r.moneda==='Soles').reduce((s,r)=>s+fact(r).total,0);
-  const usd   = d.filter(r=>r.moneda==='Dólares').reduce((s,r)=>s+fact(r).total,0);
+  const soles = d.filter(r=>r.moneda==='Soles').reduce((s,r)=>s+r.factTotal,0);
+  const usd   = d.filter(r=>r.moneda==='Dólares').reduce((s,r)=>s+r.factTotal,0);
   const meses = [...new Set(d.map(r=>r.mes))].sort(mesSort);
 
   document.getElementById('kbn').textContent  = fmtInt(bn);
   document.getElementById('kclr').textContent = fmtInt(clr);
 
-  if(soles>0&&usd>0){
+  if(soles>0 && usd>0){
     document.getElementById('kfact').textContent    = `S/ ${fmtDec(soles)}`;
     document.getElementById('kfactsub').textContent = `+ USD ${fmtDec(usd)}`;
   } else if(soles>0){
@@ -623,23 +629,37 @@ function renderKPIs(d){
   document.getElementById('kmessub').textContent = meses.join(' · ');
 }
 
-const bopts = () => ({
+// Opciones para gráfico de consumo (páginas - números enteros)
+const boptsConsumo = () => ({
   responsive:true, maintainAspectRatio:false, animation:{duration:320},
   plugins:{
     legend:{display:false},
     tooltip:{
       callbacks:{
-        label: ctx => {
-          const v = ctx.parsed.y ?? ctx.parsed;
-          return ` ${ctx.dataset.label}: ${fmtInt(v)}`;
-        }
+        label: ctx => ` ${ctx.dataset.label}: ${fmtInt(ctx.parsed.y)} páginas`
       }
     }
   },
   scales:{
     x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
-    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},
-       callback: v => fmtInt(v)}}
+    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}, callback: v => fmtInt(v)}}
+  }
+});
+
+// Opciones para gráfico de facturación (montos con 2 decimales y moneda)
+const boptsFacturacion = (moneda = 'Soles') => ({
+  responsive:true, maintainAspectRatio:false, animation:{duration:320},
+  plugins:{
+    legend:{display:false},
+    tooltip:{
+      callbacks:{
+        label: ctx => ` ${ctx.dataset.label}: ${fmtCurrency(ctx.parsed.y, moneda)}`
+      }
+    }
+  },
+  scales:{
+    x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+    y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}, callback: v => fmtCurrency(v, moneda)}}
   }
 });
 
@@ -649,8 +669,8 @@ function renderConsumo(d){
   if(!ch1){
     ch1 = new Chart(document.getElementById('cConsumo'),{type:'bar',data:{labels:MESES,datasets:[
       {label:'BN',  data:bn,  backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
-      {label:'Clr', data:clr, backgroundColor:'rgba(240,98,146,.85)',borderRadius:2,stack:'s'},
-    ]},options:bopts()});
+      {label:'Color', data:clr, backgroundColor:'rgba(240,98,146,.85)',borderRadius:2,stack:'s'},
+    ]},options:boptsConsumo()});
   } else {
     ch1.data.labels=MESES;
     ch1.data.datasets[0].data=bn; ch1.data.datasets[1].data=clr; ch1.update();
@@ -658,36 +678,71 @@ function renderConsumo(d){
 }
 
 function renderFact(d){
-  const cuota = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+fact(r).cuota,0));
-  const exc   = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+fact(r).exc,0));
+  const cuota = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.factCuota,0));
+  const exc   = MESES.map(m=>d.filter(r=>r.mes===m).reduce((s,r)=>s+r.factExc,0));
+  
+  // Determinar la moneda del gráfico (si hay múltiples monedas, mostrar ambas)
+  const hasSoles = d.some(r=>r.moneda==='Soles');
+  const hasDolares = d.some(r=>r.moneda==='Dólares');
+  let monedaLabel = 'USD';
+  if (hasSoles && !hasDolares) monedaLabel = 'Soles';
+  else if (!hasSoles && hasDolares) monedaLabel = 'Dólares';
+  else monedaLabel = 'USD';
+  
   if(!ch2){
     ch2 = new Chart(document.getElementById('cFact'),{type:'bar',data:{labels:MESES,datasets:[
-      {label:'Cuota',data:cuota,backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
-      {label:'Exc',  data:exc,  backgroundColor:'rgba(79,195,247,.85)', borderRadius:2,stack:'s'},
-    ]},options:bopts()});
+      {label:'Cuota Fija', data:cuota, backgroundColor:'rgba(232,197,71,.85)',borderRadius:2,stack:'s'},
+      {label:'Excedentes', data:exc,   backgroundColor:'rgba(79,195,247,.85)',borderRadius:2,stack:'s'},
+    ]},options:boptsFacturacion(monedaLabel)});
   } else {
     ch2.data.labels=MESES;
-    ch2.data.datasets[0].data=cuota; ch2.data.datasets[1].data=exc; ch2.update();
+    ch2.data.datasets[0].data=cuota; 
+    ch2.data.datasets[1].data=exc;
+    ch2.options = boptsFacturacion(monedaLabel);
+    ch2.update();
   }
 }
 
 function renderCli(d){
-  const keys   = [...new Set(DATA.map(r=>r.cli))];
-  const totals = keys.map(k=>d.filter(r=>r.cli===k).reduce((s,r)=>s+fact(r).total,0));
-  const names  = keys.map(k=>(CLIMAP[k]?.nombre||k).split(' ').slice(0,2).join(' '));
+  const keys = [...new Set(DATA.map(r=>r.cli))];
+  const totals = keys.map(k=>d.filter(r=>r.cli===k).reduce((s,r)=>s+r.factTotal,0));
+  const names = keys.map(k=>(CLIMAP[k]?.nombre||k).split(' ').slice(0,2).join(' '));
   const colors = keys.map(k=>{
-    const act  = filtro==='ALL'||filtro===k;
+    const act = filtro==='ALL'||filtro===k;
     const base = CLIMAP[k]?.moneda==='Soles'?'105,240,174':'79,195,247';
-    return `rgba(${base},${act?.85:.2})`;
+    return `rgba(${base},${act ? 0.85 : 0.2})`;
   });
+  
+  // Opciones personalizadas para gráfico por cliente con moneda específica por barra
+  const optionsCli = {
+    responsive:true, maintainAspectRatio:false, animation:{duration:320},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          label: (ctx) => {
+            const clienteKey = keys[ctx.dataIndex];
+            const moneda = CLIMAP[clienteKey]?.moneda || 'Soles';
+            return ` Total: ${fmtCurrency(ctx.parsed.y, moneda)}`;
+          }
+        }
+      }
+    },
+    scales:{
+      x:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11},maxRotation:45}},
+      y:{grid:{color:'#1f2530'},ticks:{color:'#7a8399',font:{family:'DM Mono',size:11}, callback: v => `$${fmtDec(v)}`}}
+    }
+  };
+  
   if(!ch3){
     ch3 = new Chart(document.getElementById('cCli'),{type:'bar',data:{labels:names,datasets:[
       {label:'Total',data:totals,backgroundColor:colors,borderRadius:3}
-    ]},options:bopts()});
+    ]},options:optionsCli});
   } else {
     ch3.data.labels=names;
     ch3.data.datasets[0].data=totals;
     ch3.data.datasets[0].backgroundColor=colors;
+    ch3.options = optionsCli;
     ch3.update();
   }
 }
